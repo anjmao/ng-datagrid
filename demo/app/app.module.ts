@@ -9,12 +9,19 @@ import { AppComponent } from './app.component';
 import { LayoutHeaderComponent } from './layout/header.component';
 import { LayoutSidenavComponent } from './layout/sidenav-component';
 import { DataService } from './shared/data.service';
+import { DataSourceExample } from './examples/data-source.component';
+import { NgLentaModule } from 'ng-lenta';
 
 export const appRoutes: Routes = [
     {
         path: '',
         redirectTo: '/data-sources',
         pathMatch: 'full'
+    },
+    {
+        path: 'data-sources',
+        component: DataSourceExample,
+        data: { title: 'Data source' }
     }
 ];
 
@@ -31,7 +38,8 @@ export const appRoutes: Routes = [
             {
                 useHash: true
             }
-        )
+        ),
+        NgLentaModule
     ],
     providers: [
         DataService,
@@ -49,7 +57,8 @@ export const appRoutes: Routes = [
     declarations: [
         AppComponent,
         LayoutHeaderComponent,
-        LayoutSidenavComponent
+        LayoutSidenavComponent,
+        DataSourceExample
     ],
     entryComponents: [],
     bootstrap: [AppComponent]

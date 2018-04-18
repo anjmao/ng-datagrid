@@ -1,11 +1,8 @@
 import '../style/styles.scss';
-
 import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
-import 'rxjs/add/operator/filter';
-import 'rxjs/add/operator/map';
-import 'rxjs/add/operator/mergeMap';
 import { Title } from '@angular/platform-browser';
+import { filter, map, mergeMap } from 'rxjs/operators';
 
 @Component({
     selector: 'demo-app',
@@ -28,21 +25,21 @@ export class AppComponent {
     }
 
     private setTitle() {
-        this.router.events
-            .filter((event) => event instanceof NavigationEnd)
-            .map(() => this.activatedRoute)
-            .map((route) => {
+        this.router.events.pipe(
+            filter((event) => event instanceof NavigationEnd),
+            map(() => this.activatedRoute),
+            map((route) => {
                 while (route.firstChild) {
                     route = route.firstChild;
                 }
                 return route;
-            })
-            .filter((route) => route.outlet === 'primary')
-            .mergeMap((route) => route.data)
+            }),
+            filter((route) => route.outlet === 'primary'),
+            mergeMap((route) => route.data))
             .subscribe((event) => {
                 this.title = event['title'];
                 this.titleService.setTitle(this.title);
-                this.exampleSourceUrl = `https://github.com/ng-select/ng-select/tree/master/demo/app/examples/${event['fileName']}`;
+                this.exampleSourceUrl = `https://github.com/anjmao/ng-lenta/tree/master/demo/app/examples/${event['fileName']}`;
             });
     }
 

@@ -1,11 +1,8 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
-import 'rxjs/add/operator/distinctUntilChanged';
-import 'rxjs/add/operator/debounceTime';
-import 'rxjs/add/operator/switchMap';
-import 'rxjs/add/observable/of';
-import 'rxjs/add/operator/delay';
 import { HttpClient } from '@angular/common/http';
+import { map, delay } from 'rxjs/operators';
+import { of} from 'rxjs/observable/of';
 
 export interface Person {
     id: string;
@@ -24,9 +21,9 @@ export class DataService {
 
     getGithubAccounts(term: string = null) {
         if (term) {
-            return this.http.get<any>(`https://api.github.com/search/users?q=${term}`).map(rsp => rsp.items);
+            return this.http.get<any>(`https://api.github.com/search/users?q=${term}`).pipe(map(rsp => rsp.items));
         } else {
-            return Observable.of([]);
+            return of([]);
         }
     }
 
@@ -43,7 +40,7 @@ export class DataService {
         if (term) {
             items = items.filter(x => x.name.toLocaleLowerCase().indexOf(term.toLocaleLowerCase()) > -1);
         }
-        return Observable.of(items).delay(500);
+        return of(items).pipe(delay(500));
     }
 }
 

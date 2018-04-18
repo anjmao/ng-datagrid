@@ -1,0 +1,12 @@
+.ngl-body-row {
+    display: flex;
+    border: 1px solid red;
+    margin: 25px 10px;
+
+    .ngl-body-cell {
+        flex: 1;
+        display: block;
+        border: 1px solid green;
+        margin: 10px;
+    }
+}

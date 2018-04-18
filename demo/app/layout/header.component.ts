@@ -32,14 +32,14 @@ const materialTheme = require('./../../../src/themes/material.theme.scss');
                 <ul class="navbar-nav mr-auto">
                 </ul>
 
-                <form class="form-inline my-2 my-lg-0">
+                <!--<form class="form-inline my-2 my-lg-0">
                     <a class="github-button"
-                       href="https://github.com/ng-select/ng-select"
+                       href="https://github.com/anjmao/ng-lenta"
                        data-icon="mark-github"
                        data-size="large"
                        data-show-count="true"
-                       aria-label="Visit ng-select/ng-select on GitHub">Github</a>
-                </form>
+                       aria-label="Visit ng-lenta on GitHub">Github</a>
+                </form>-->
             </div>
         </nav>
     `
