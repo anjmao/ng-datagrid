@@ -1,0 +1,9 @@
+node_modules
+coverage
+dist
+out-tsc
+.idea
+.DS_Store
+travis_rsa
+travis_rsa.pub
+.vscode/**
