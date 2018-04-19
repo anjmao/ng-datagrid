@@ -23,7 +23,9 @@ import { Column } from './public-types';
     },
     template: `
         <ngl-header [cells]="list.headerCells"></ngl-header>
-        <ngl-body-row *ngFor="let row of list.rows" [row]="row"></ngl-body-row>
+        <ngl-body>
+            <ngl-body-row *ngFor="let row of list.rows" [row]="row"></ngl-body-row>
+        </ngl-body>
         <ngl-footer></ngl-footer>
     `
 })

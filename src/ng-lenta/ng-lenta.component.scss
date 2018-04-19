@@ -1,6 +1,12 @@
 .ngl-table {
     display: block;
 
+    .ngl-body {
+        display: block;
+        max-height: 500px;
+        overflow: auto;
+    }
+
     .ngl-header {
         display: flex;
         align-items: center;

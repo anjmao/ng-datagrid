@@ -6,6 +6,7 @@ import { BodyCellComponent } from './body/cell/body-cell.component';
 import { HeaderComponent } from './header/header.component';
 import { HeaderCellComponent } from './header/cell/header-cell.component';
 import { FooterComponent } from './footer/footer.component';
+import { BodyComponent } from './body/body.component';
 
 @NgModule({
     imports: [
@@ -16,6 +17,7 @@ import { FooterComponent } from './footer/footer.component';
     ],
     declarations: [
         NgLentaComponent,
+        BodyComponent,
         BodyRowComponent,
         BodyCellComponent,
         HeaderComponent,
