@@ -1,13 +1,13 @@
-import { Injectable } from '@angular/core';
+import { Injectable, TemplateRef } from '@angular/core';
 import { Column } from '../public-types';
 import { isDefined } from '../utils/value-utils';
 
 export class BodyCell {
-    constructor(public value: any) {}
+    constructor(public value: any, public column: string, public template: TemplateRef<any>) {}
 }
 
 export class BodyRow {
-    constructor(public cells: BodyCell[] = []) {}
+    constructor(public ref: any, public cells: BodyCell[]) {}
 }
 
 export class HeaderCell {
@@ -15,6 +15,10 @@ export class HeaderCell {
     constructor(col: Column) {
         this.value = isDefined(col.name) ? col.name : col.prop;
     }
+}
+
+export interface ViewTemplates {
+    bodyCellTemplates: Map<string, TemplateRef<any>>;
 }
 
 @Injectable()
@@ -36,7 +40,7 @@ export class LentaList {
         return this._headerCells;
     }
 
-    setRows(rows: any[]) {
+    setRows(rows: any[], templates: ViewTemplates) {
         if (rows.length > 0 && !this._colMap) {
             throw new Error('Columns should be set.');
         }
@@ -44,18 +48,16 @@ export class LentaList {
         this._rows = [];
         for (const row of rows) {
             const cells: BodyCell[] = [];
-            for (const key in row) {
-                if (row.hasOwnProperty(key)) {
-                    const col = this._colMap.get(key);
-                    if (!col) {
-                        continue;
-                    }
-                    const value = row[key];
-                    const cell = new BodyCell(value);
+            for (const col of this._cols) {
+                if (row[col.prop] !== undefined) {
+                    // TODO: this is not optimal
+                    const template = templates.bodyCellTemplates.get(col.prop);
+                    const value = row[col.prop];
+                    const cell = new BodyCell(value, col.prop, template);
                     cells.push(cell);
                 }
             }
-            this._rows.push(new BodyRow(cells));
+            this._rows.push(new BodyRow(row, cells));
         }
     }
 

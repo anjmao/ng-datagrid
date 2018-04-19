@@ -7,13 +7,15 @@ import { HeaderComponent } from './header/header.component';
 import { HeaderCellComponent } from './header/cell/header-cell.component';
 import { FooterComponent } from './footer/footer.component';
 import { BodyComponent } from './body/body.component';
+import { BodyCellTemplateDirective } from './body/cell/body-cell-template.directive';
 
 @NgModule({
     imports: [
         CommonModule
     ],
     exports: [
-        NgLentaComponent
+        NgLentaComponent,
+        BodyCellTemplateDirective
     ],
     declarations: [
         NgLentaComponent,
@@ -22,7 +24,8 @@ import { BodyComponent } from './body/body.component';
         BodyCellComponent,
         HeaderComponent,
         HeaderCellComponent,
-        FooterComponent
+        FooterComponent,
+        BodyCellTemplateDirective
     ],
     providers: [],
 })

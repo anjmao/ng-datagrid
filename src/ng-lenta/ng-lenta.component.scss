@@ -3,8 +3,6 @@
 
     .ngl-body {
         display: block;
-        max-height: 500px;
-        overflow: auto;
     }
 
     .ngl-header {
@@ -23,6 +21,8 @@
         .ngl-body-cell {
             flex: 1;
             display: block;
+            overflow: hidden;
+            word-wrap: break-word;
         }
     }
 

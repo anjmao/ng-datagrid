@@ -1,5 +1,4 @@
-import { Component, OnInit, Input, ChangeDetectionStrategy } from '@angular/core';
-import { HeaderCell } from '../model/list';
+import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 
 @Component({
     selector: 'ngl-header',
@@ -9,16 +8,12 @@ import { HeaderCell } from '../model/list';
         'role': 'row'
     },
     template: `
-        <ngl-header-cell *ngFor="let cell of cells" [cell]="cell"></ngl-header-cell>
+       <ng-content></ng-content>
     `
 })
 export class HeaderComponent implements OnInit {
-
-    @Input() cells: HeaderCell[] = [];
-
     constructor() { }
 
     ngOnInit() {
-        console.log('header cells', this.cells);
     }
 }

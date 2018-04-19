@@ -27,6 +27,7 @@
     "@angular/platform-browser": "^5.2.9",
     "@angular/platform-browser-dynamic": "^5.2.9",
     "@angular/router": "^5.2.9",
+    "@mdi/font": "^2.3.54",
     "@ng-bootstrap/ng-bootstrap": "^1.1.0",
     "@types/jasmine": "^2.5.36",
     "@types/node": "^6.0.87",

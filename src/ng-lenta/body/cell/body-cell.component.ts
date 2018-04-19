@@ -1,5 +1,5 @@
 import { Component, OnInit, ChangeDetectionStrategy, Input, ViewEncapsulation } from '@angular/core';
-import { BodyCell } from '../../model/list';
+import { BodyCell, BodyRow } from '../../model/list';
 
 @Component({
     selector: 'ngl-body-cell',
@@ -10,14 +10,24 @@ import { BodyCell } from '../../model/list';
         'role': 'gridcell'
     },
     template: `
-        {{cell.value}}
+        <ng-template #defaultTemplate>
+            {{cell.value}}
+        </ng-template>
+    
+        <ng-template
+            [ngTemplateOutlet]="cell.template || defaultTemplate"
+            [ngTemplateOutletContext]="{ row: row.ref }">
+        </ng-template>
     `
 })
 export class BodyCellComponent implements OnInit {
 
     @Input() cell: BodyCell;
+    @Input() row: BodyRow;
 
     constructor() { }
 
-    ngOnInit() { }
+    ngOnInit() {
+
+    }
 }
