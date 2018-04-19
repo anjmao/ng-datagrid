@@ -17,9 +17,14 @@ import { Column } from './public-types';
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None,
     styleUrls: ['./ng-lenta.component.scss'],
+    host: {
+        'class': 'ngl-table',
+        'role': 'grid'
+    },
     template: `
         <ngl-header [cells]="list.headerCells"></ngl-header>
         <ngl-body-row *ngFor="let row of list.rows" [row]="row"></ngl-body-row>
+        <ngl-footer></ngl-footer>
     `
 })
 export class NgLentaComponent implements OnInit, OnChanges {

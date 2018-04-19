@@ -6,7 +6,8 @@ import { BodyRow } from '../../model/list';
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None,
     host: {
-        'class': 'ngl-body-row'
+        'class': 'ngl-body-row',
+        'role': 'row'
     },
     template: `
         <ngl-body-cell *ngFor="let cell of row.cells" [cell]="cell"></ngl-body-cell>

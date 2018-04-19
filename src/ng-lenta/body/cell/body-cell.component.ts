@@ -6,10 +6,11 @@ import { BodyCell } from '../../model/list';
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None,
     host: {
-        'class': 'ngl-body-cell'
+        'class': 'ngl-body-cell',
+        'role': 'gridcell'
     },
     template: `
-        {{cell.value | json}}
+        {{cell.value}}
     `
 })
 export class BodyCellComponent implements OnInit {

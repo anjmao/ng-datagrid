@@ -1,23 +1,27 @@
-.ngl-header {
-    display: flex;
+.ngl-table {
+    display: block;
 
-    .ngl-header-cell {
-        flex: 1;
-        display: block;
-        border: 1px solid palevioletred;
-        padding: 10px;
+    .ngl-header {
+        display: flex;
+        align-items: center;
+    
+        .ngl-header-cell {
+            flex: 1;
+        }
     }
-}
+    
+    .ngl-body-row {
+        display: flex;
+        align-items: center;
+    
+        .ngl-body-cell {
+            flex: 1;
+            display: block;
+        }
+    }
 
-.ngl-body-row {
-    display: flex;
-    border: 1px solid red;
-    margin: 25px 10px;
-
-    .ngl-body-cell {
-        flex: 1;
-        display: block;
-        border: 1px solid green;
-        margin: 10px;
+    .ngl-footer {
+        display: flex;
+        align-items: center;
     }
 }

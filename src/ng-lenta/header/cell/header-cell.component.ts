@@ -6,7 +6,8 @@ import { HeaderCell } from '../../model/list';
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None,
     host: {
-        'class': 'ngl-header-cell'
+        'class': 'ngl-header-cell',
+        'role': 'columnheader'
     },
     template: `
         {{cell.value}}

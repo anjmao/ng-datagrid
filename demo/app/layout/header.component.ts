@@ -1,6 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
 const defaultTheme = require('./../../../src/themes/default.theme.scss');
-const materialTheme = require('./../../../src/themes/material.theme.scss');
 
 @Component({
     selector: 'layout-header',
@@ -8,7 +7,7 @@ const materialTheme = require('./../../../src/themes/material.theme.scss');
         <nav class="navbar navbar-expand navbar-dark flex-column flex-md-row bd-navbar bg-dark">
             <a class="navbar-brand" href="#">
                 <img src="https://angular.io/assets/images/logos/angular/angular.svg" width="32px" height="32px"/>
-                @ng-select/ng-select@{{version}}
+                ng-lenta@{{version}}
             </a>
             <button class="navbar-toggler"
                     type="button"
@@ -25,7 +24,6 @@ const materialTheme = require('./../../../src/themes/material.theme.scss');
                     <button class="btn btn-outline-light btn-sm" style="width: 130px;" ngbDropdownToggle>{{theme}}</button>
                     <div ngbDropdownMenu>
                         <button (click)="setTheme('Default theme')" class="dropdown-item btn-sm">Default theme</button>
-                        <button (click)="setTheme('Material theme')" class="dropdown-item btn-sm">Material theme</button>
                     </div>
                 </div>
 
@@ -55,11 +53,9 @@ export class LayoutHeaderComponent implements OnInit {
     setTheme(theme) {
         this.theme = theme;
         if (this.theme === 'Default theme') {
-            materialTheme.unuse();
             defaultTheme.use();
         } else {
             defaultTheme.unuse();
-            materialTheme.use();
         }
     }
 }

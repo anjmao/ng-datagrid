@@ -5,7 +5,8 @@ import { HeaderCell } from '../model/list';
     selector: 'ngl-header',
     changeDetection: ChangeDetectionStrategy.OnPush,
     host: {
-        'class': 'ngl-header'
+        'class': 'ngl-header',
+        'role': 'row'
     },
     template: `
         <ngl-header-cell *ngFor="let cell of cells" [cell]="cell"></ngl-header-cell>

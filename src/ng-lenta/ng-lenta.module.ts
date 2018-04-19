@@ -5,6 +5,7 @@ import { BodyRowComponent } from './body/row/body-row.component';
 import { BodyCellComponent } from './body/cell/body-cell.component';
 import { HeaderComponent } from './header/header.component';
 import { HeaderCellComponent } from './header/cell/header-cell.component';
+import { FooterComponent } from './footer/footer.component';
 
 @NgModule({
     imports: [
@@ -18,7 +19,8 @@ import { HeaderCellComponent } from './header/cell/header-cell.component';
         BodyRowComponent,
         BodyCellComponent,
         HeaderComponent,
-        HeaderCellComponent
+        HeaderCellComponent,
+        FooterComponent
     ],
     providers: [],
 })
