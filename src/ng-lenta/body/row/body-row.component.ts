@@ -2,14 +2,14 @@ import { Component, OnInit, Input, ChangeDetectionStrategy, ViewEncapsulation } 
 import { BodyRow } from '../../model/list';
 
 @Component({
-    selector: 'body-row',
+    selector: 'ngl-body-row',
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None,
     host: {
         'class': 'ngl-body-row'
     },
     template: `
-        <body-cell *ngFor="let cell of row.cells" [cell]="cell"></body-cell>
+        <ngl-body-cell *ngFor="let cell of row.cells" [cell]="cell"></ngl-body-cell>
     `
 })
 export class BodyRowComponent implements OnInit {

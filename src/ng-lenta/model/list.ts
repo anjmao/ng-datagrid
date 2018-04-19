@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Column } from '../public-types';
+import { isDefined } from '../utils/value-utils';
 
 export class BodyCell {
     constructor(public value: any) {}
@@ -9,11 +10,19 @@ export class BodyRow {
     constructor(public cells: BodyCell[] = []) {}
 }
 
+export class HeaderCell {
+    public value: string;
+    constructor(col: Column) {
+        this.value = isDefined(col.name) ? col.name : col.prop;
+    }
+}
+
 @Injectable()
 export class LentaList {
     private _rows: BodyRow[] = [];
     private _colMap: Map<string, Column>;
     private _cols: Column[] = [];
+    private _headerCells: HeaderCell[] = [];
 
     get rows() {
         return this._rows;
@@ -21,6 +30,10 @@ export class LentaList {
 
     get cols() {
         return this._cols;
+    }
+
+    get headerCells() {
+        return this._headerCells;
     }
 
     setRows(rows: any[]) {
@@ -47,9 +60,11 @@ export class LentaList {
     }
 
     setColumns(cols: Column[]) {
+        this._headerCells = [];
         this._cols = cols;
         this._colMap = new Map<string, Column>();
         for (const col of this._cols) {
+            this._headerCells.push(new HeaderCell(col))
             this._colMap.set(col.prop, col);
         }
     }

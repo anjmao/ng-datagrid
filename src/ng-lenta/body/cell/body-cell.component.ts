@@ -2,7 +2,7 @@ import { Component, OnInit, ChangeDetectionStrategy, Input, ViewEncapsulation } 
 import { BodyCell } from '../../model/list';
 
 @Component({
-    selector: 'body-cell',
+    selector: 'ngl-body-cell',
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None,
     host: {

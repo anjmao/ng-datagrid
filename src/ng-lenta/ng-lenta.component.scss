@@ -1,3 +1,14 @@
+.ngl-header {
+    display: flex;
+
+    .ngl-header-cell {
+        flex: 1;
+        display: block;
+        border: 1px solid palevioletred;
+        padding: 10px;
+    }
+}
+
 .ngl-body-row {
     display: flex;
     border: 1px solid red;

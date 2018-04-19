@@ -18,9 +18,8 @@ import { Column } from './public-types';
     encapsulation: ViewEncapsulation.None,
     styleUrls: ['./ng-lenta.component.scss'],
     template: `
-        <div *ngFor="let row of list.rows">
-            <body-row [row]="row"></body-row>
-        </div>
+        <ngl-header [cells]="list.headerCells"></ngl-header>
+        <ngl-body-row *ngFor="let row of list.rows" [row]="row"></ngl-body-row>
     `
 })
 export class NgLentaComponent implements OnInit, OnChanges {
