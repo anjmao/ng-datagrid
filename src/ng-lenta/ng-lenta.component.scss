@@ -29,5 +29,31 @@
     .ngl-footer {
         display: flex;
         align-items: center;
+
+        .ngl-paging {
+            display: block;
+            margin-left: auto;
+
+            .ngl-paging-list {
+                margin: 0;
+                padding: 0;
+                .ngl-page-item {
+                    display: inline-block;
+                    padding: 0 10px;
+                    font-size: 13px;
+
+                    &:hover, &.active {
+                        border-bottom: 2px solid #333;
+                    }
+
+                    .ngl-page-link {
+                        color: #555;
+                        &:hover {
+                            text-decoration: none;
+                        }
+                    }
+                }
+            }
+        }
     }
 }

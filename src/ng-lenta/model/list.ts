@@ -1,6 +1,6 @@
 import { Injectable, TemplateRef } from '@angular/core';
 import { Column } from '../public-types';
-import { isDefined } from '../utils/value-utils';
+import { isDefined } from '../util/value-util';
 
 export class BodyCell {
     constructor(public value: any, public column: string, public template: TemplateRef<any>) { }

@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 
 @Component({
     selector: 'ngl-footer',
-    template: '<div>footer</div>',
+    template: '<ng-content></ng-content>',
     host: {
         'class': 'ngl-footer'
     }

@@ -34,7 +34,9 @@ import { BodyRowTemplateDirective } from './body/row/body-row-template.directive
         <ngl-body>
             <ngl-body-row *ngFor="let row of list.rows" [row]="row"></ngl-body-row>
         </ngl-body>
-        <ngl-footer></ngl-footer>
+        <ngl-footer>
+            <ngl-paging [collectionSize]="120" [page]="1" [maxSize]="5" [rotate]="true" [boundaryLinks]="true"></ngl-paging>
+        </ngl-footer>
     `
 })
 export class NgLentaComponent implements OnInit, OnChanges {

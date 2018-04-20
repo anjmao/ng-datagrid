@@ -9,6 +9,8 @@ import { FooterComponent } from './footer/footer.component';
 import { BodyComponent } from './body/body.component';
 import { BodyCellTemplateDirective } from './body/cell/body-cell-template.directive';
 import { BodyRowTemplateDirective } from './body/row/body-row-template.directive';
+import { PagingComponent } from './footer/paging/paging.component';
+import { PagingConfig } from './footer/paging/paging-config';
 
 @NgModule({
     imports: [
@@ -28,8 +30,11 @@ import { BodyRowTemplateDirective } from './body/row/body-row-template.directive
         HeaderCellComponent,
         FooterComponent,
         BodyCellTemplateDirective,
-        BodyRowTemplateDirective
+        BodyRowTemplateDirective,
+        PagingComponent
     ],
-    providers: [],
+    providers: [
+        PagingConfig
+    ],
 })
 export class NgLentaModule { }

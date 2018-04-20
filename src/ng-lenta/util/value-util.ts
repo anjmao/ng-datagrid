@@ -13,3 +13,11 @@ export function isPromise(value: any) {
 export function isFunction(value: any) {
     return value instanceof Function;
 }
+
+export function isNumber(value: any): value is number {
+    return !isNaN(toInteger(value));
+}
+
+export function toInteger(value: any): number {
+    return parseInt(`${value}`, 10);
+}
