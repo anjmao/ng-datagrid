@@ -15,15 +15,14 @@ import { Column } from '../../../src/ng-lenta/public-types';
         </ng-lenta>
     `
 })
-
 export class DataSourceExample implements OnInit {
 
     people: Person[] = [];
     columns: Column[] = [
-        { prop: 'name' },
-        { prop: 'email' },
-        { prop: 'company' },
-        { prop: 'isActive' }
+        { prop: 'name', name: 'Name' },
+        { prop: 'email', name: 'Email' },
+        { prop: 'company', name: 'Company' },
+        { prop: 'isActive', name: 'Active' }
     ]
 
     constructor(private dataService: DataService) { }

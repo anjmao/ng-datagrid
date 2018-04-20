@@ -10,13 +10,19 @@ import { BodyRow } from '../../model/list';
         'role': 'row'
     },
     template: `
-        <ngl-body-cell *ngFor="let cell of row.cells" [row]="row" [cell]="cell"></ngl-body-cell>
+        <ng-template #defaultTemplate>
+            <ngl-body-cell *ngFor="let cell of row.cells" [row]="row" [cell]="cell"></ngl-body-cell>
+        </ng-template>
+
+        <ng-template
+            [ngTemplateOutlet]="row.template || defaultTemplate"
+            [ngTemplateOutletContext]="{ row: row.ref }">
+        </ng-template>
     `
 })
 export class BodyRowComponent implements OnInit {
 
     @Input() row: BodyRow;
-    @Input() cellTemplates;
 
     constructor() { }
 

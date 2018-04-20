@@ -3,11 +3,11 @@ import { Column } from '../public-types';
 import { isDefined } from '../utils/value-utils';
 
 export class BodyCell {
-    constructor(public value: any, public column: string, public template: TemplateRef<any>) {}
+    constructor(public value: any, public column: string, public template: TemplateRef<any>) { }
 }
 
 export class BodyRow {
-    constructor(public ref: any, public cells: BodyCell[]) {}
+    constructor(public ref: any, public cells: BodyCell[], public template: TemplateRef<any>) { }
 }
 
 export class HeaderCell {
@@ -19,6 +19,7 @@ export class HeaderCell {
 
 export interface ViewTemplates {
     bodyCellTemplates: Map<string, TemplateRef<any>>;
+    bodyRowTemplate: TemplateRef<any>
 }
 
 @Injectable()
@@ -49,15 +50,14 @@ export class LentaList {
         for (const row of rows) {
             const cells: BodyCell[] = [];
             for (const col of this._cols) {
-                if (row[col.prop] !== undefined) {
-                    // TODO: this is not optimal
-                    const template = templates.bodyCellTemplates.get(col.prop);
-                    const value = row[col.prop];
-                    const cell = new BodyCell(value, col.prop, template);
-                    cells.push(cell);
+                if (row[col.prop] === undefined) {
+                    continue;
                 }
+                const cellTemplate = templates.bodyCellTemplates && templates.bodyCellTemplates.get(col.prop);
+                const value = row[col.prop];
+                cells.push(new BodyCell(value, col.prop, cellTemplate));
             }
-            this._rows.push(new BodyRow(row, cells));
+            this._rows.push(new BodyRow(row, cells, templates.bodyRowTemplate));
         }
     }
 

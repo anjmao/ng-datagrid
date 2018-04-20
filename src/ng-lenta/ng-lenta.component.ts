@@ -8,12 +8,14 @@ import {
     ViewEncapsulation,
     QueryList,
     ContentChildren,
-    TemplateRef
+    TemplateRef,
+    ContentChild
 } from '@angular/core';
 
-import { LentaList } from './model/list';
+import { LentaList, ViewTemplates } from './model/list';
 import { Column } from './public-types';
 import { BodyCellTemplateDirective } from './body/cell/body-cell-template.directive';
+import { BodyRowTemplateDirective } from './body/row/body-row-template.directive';
 
 @Component({
     selector: 'ng-lenta',
@@ -30,7 +32,7 @@ import { BodyCellTemplateDirective } from './body/cell/body-cell-template.direct
             <ngl-header-cell *ngFor="let cell of list.headerCells"[cell]="cell"></ngl-header-cell>
         </ngl-header>
         <ngl-body>
-            <ngl-body-row *ngFor="let row of list.rows" [row]="row" [cellTemplates]="bodyCellTemplates"></ngl-body-row>
+            <ngl-body-row *ngFor="let row of list.rows" [row]="row"></ngl-body-row>
         </ngl-body>
         <ngl-footer></ngl-footer>
     `
@@ -39,31 +41,24 @@ export class NgLentaComponent implements OnInit, OnChanges {
     @Input() rows: any[] = [];
     @Input() columns: Column[] = [];
     @ContentChildren(BodyCellTemplateDirective) bodyCellTemplates: QueryList<BodyCellTemplateDirective>;
-
-    // private _pendingRows;
+    @ContentChild(BodyRowTemplateDirective) bodyRowTemplate: BodyRowTemplateDirective;
 
     constructor(public list: LentaList) { }
 
     ngOnInit() { }
 
-    ngOnChanges(c: SimpleChanges) {
-        if (c.columns) {
-            this.setColumns(c.columns.currentValue);
+    ngOnChanges(changes: SimpleChanges) {
+        if (changes.columns) {
+            this.setColumns(changes.columns.currentValue);
         }
-        if (c.rows) {
+        if (changes.rows) {
             if (this.bodyCellTemplates) {
-                this.setRows(c.rows.currentValue);
-            } else {
-                // this._pendingRows = c.rows;
+                this.setRows(changes.rows.currentValue);
             }
         }
     }
 
     ngAfterContentInit() {
-        // if (this._pendingRows) {
-        //     this.setRows(this._pendingRows);
-        //     this._pendingRows = null;
-        // }
     }
 
     private setColumns(columns: Column[]) {
@@ -71,11 +66,19 @@ export class NgLentaComponent implements OnInit, OnChanges {
     }
 
     private setRows(rows: any[]) {
-        console.log(this.bodyCellTemplates);
-        const map = new Map<string, TemplateRef<any>>();
-        this.bodyCellTemplates.forEach((t) => {
-            map.set(t.column, t.templateRef);
-        })
-        this.list.setRows(rows, { bodyCellTemplates: map });
+        const templates: ViewTemplates = {
+            bodyCellTemplates: null,
+            bodyRowTemplate: this.bodyRowTemplate ? this.bodyRowTemplate.templateRef : null
+        };
+
+        if (!templates.bodyRowTemplate) {
+            const cellTemplatesRefMap = new Map<string, TemplateRef<any>>();
+            this.bodyCellTemplates.forEach((t) => {
+                cellTemplatesRefMap.set(t.column, t.templateRef);
+            });
+            templates.bodyCellTemplates = cellTemplatesRefMap;
+        }
+
+        this.list.setRows(rows, templates);
     }
 }
