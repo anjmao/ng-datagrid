@@ -1,4 +1,4 @@
-import { 
+import {
     Component,
     OnInit,
     OnChanges,
@@ -9,17 +9,22 @@ import {
     QueryList,
     ContentChildren,
     TemplateRef,
-    ContentChild
+    ContentChild,
+    ChangeDetectorRef,
+    OnDestroy
 } from '@angular/core';
 
-import { LentaList, ViewTemplates } from './model/list';
-import { Column } from './public-types';
+import { State, ViewTemplates } from './model/state';
+import { LentaColumn, LentaOptions } from './public-types';
 import { BodyCellTemplateDirective } from './body/cell/body-cell-template.directive';
 import { BodyRowTemplateDirective } from './body/row/body-row-template.directive';
+import { Subject } from 'rxjs/Subject';
+import { takeUntil } from 'rxjs/operators';
+import { Options } from './model/options';
 
 @Component({
     selector: 'ng-lenta',
-    providers: [LentaList],
+    providers: [State],
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None,
     styleUrls: ['./ng-lenta.component.scss'],
@@ -29,45 +34,80 @@ import { BodyRowTemplateDirective } from './body/row/body-row-template.directive
     },
     template: `
         <ngl-header>
-            <ngl-header-cell *ngFor="let cell of list.headerCells"[cell]="cell"></ngl-header-cell>
+            <ngl-header-cell *ngFor="let cell of state.headerCells"[cell]="cell"></ngl-header-cell>
         </ngl-header>
         <ngl-body>
-            <ngl-body-row *ngFor="let row of list.rows" [row]="row"></ngl-body-row>
+            <ngl-body-row *ngFor="let row of state.viewRows" [row]="row"></ngl-body-row>
         </ngl-body>
         <ngl-footer>
-            <ngl-paging [collectionSize]="120" [page]="1" [maxSize]="5" [rotate]="true" [boundaryLinks]="true"></ngl-paging>
+            <ngl-paging
+                (pageChange)="changePage($event)"
+                [totalCount]="totalCount"
+                [page]="page">
+            </ngl-paging>
         </ngl-footer>
     `
 })
-export class NgLentaComponent implements OnInit, OnChanges {
+export class NgLentaComponent implements OnInit, OnChanges, OnDestroy {
     @Input() rows: any[] = [];
-    @Input() columns: Column[] = [];
+    @Input() columns: LentaColumn[] = [];
+    @Input() page = 1;
+    @Input() totalCount: number;
+    @Input() options: LentaOptions;
+
     @ContentChildren(BodyCellTemplateDirective) bodyCellTemplates: QueryList<BodyCellTemplateDirective>;
     @ContentChild(BodyRowTemplateDirective) bodyRowTemplate: BodyRowTemplateDirective;
 
-    constructor(public list: LentaList) { }
+    private _pendingRows$ = new Subject<any[]>();
+    private _destroy$ = new Subject<void>();
 
-    ngOnInit() { }
+    constructor(
+        public state: State,
+        private _options: Options,
+        private _cd: ChangeDetectorRef
+    ) { 
+        this.state.pageSize = this._options.paging.pageSize;
+    }
+
+    ngOnInit() {
+        this._options.mergePublicOptions(this.options);
+    }
 
     ngOnChanges(changes: SimpleChanges) {
         if (changes.columns) {
-            this.setColumns(changes.columns.currentValue);
+            this._setColumns(changes.columns.currentValue);
         }
+
         if (changes.rows) {
-            if (this.bodyCellTemplates) {
-                this.setRows(changes.rows.currentValue);
-            }
+            this._pendingRows$.next(this.rows);
         }
     }
 
     ngAfterContentInit() {
+        this._pendingRows$.pipe(takeUntil(this._destroy$)).subscribe((rows) => {
+            if (this._options.clientSide) {
+                this.totalCount = rows.length;
+            }
+            this._setRows(rows);
+            this.state.setPage(this.page);
+        });
     }
 
-    private setColumns(columns: Column[]) {
-        this.list.setColumns(columns);
+    ngOnDestroy() {
+        this._destroy$.next();
+        this._destroy$.complete();
     }
 
-    private setRows(rows: any[]) {
+    changePage(page: number) {
+        this.state.setPage(page);
+        this._cd.markForCheck();
+    }
+
+    private _setColumns(columns: LentaColumn[]) {
+        this.state.setColumns(columns);
+    }
+
+    private _setRows(rows: any[]) {
         const templates: ViewTemplates = {
             bodyCellTemplates: null,
             bodyRowTemplate: this.bodyRowTemplate ? this.bodyRowTemplate.templateRef : null
@@ -81,6 +121,6 @@ export class NgLentaComponent implements OnInit, OnChanges {
             templates.bodyCellTemplates = cellTemplatesRefMap;
         }
 
-        this.list.setRows(rows, templates);
+        this.state.setRows(rows, templates);
     }
 }

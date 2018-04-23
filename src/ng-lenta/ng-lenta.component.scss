@@ -37,19 +37,51 @@
             .ngl-paging-list {
                 margin: 0;
                 padding: 0;
+                
                 .ngl-page-item {
                     display: inline-block;
-                    padding: 0 10px;
-                    font-size: 13px;
+                    margin: 0 5px;
 
-                    &:hover, &.active {
-                        border-bottom: 2px solid #333;
+                    &.boundary-action-item {
+                        margin: 0;
+                    }
+
+                    &.active:not(.disabled) {  
+                        .ngl-page-link {
+                            border-bottom: 2px solid #17a2b8;
+                            color: #17a2b8;
+                            font-weight: 600;
+                            &:hover {
+                                border-bottom: 2px solid #17a2b8;
+                            }
+                        }
+                    }
+
+                    &:not(.disabled) {
+                        .ngl-page-link:hover {
+                            text-decoration: none;
+                            border-bottom: 2px solid #333;
+                        }
+                    }
+
+                    &.disabled {
+                        .ngl-page-link {
+                            color: #ccc;
+                        }
                     }
 
                     .ngl-page-link {
                         color: #555;
-                        &:hover {
-                            text-decoration: none;
+                        display: block;
+                        padding: 0 3px;
+                        font-size: 13px;
+                        line-height: 18px;
+
+                        .mdi::before {
+                            font-size: 18px;
+                            line-height: 14px;
+                            top: 2px;
+                            position: relative; 
                         }
                     }
                 }

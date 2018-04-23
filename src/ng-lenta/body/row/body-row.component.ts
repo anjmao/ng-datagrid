@@ -1,5 +1,5 @@
 import { Component, OnInit, Input, ChangeDetectionStrategy, ViewEncapsulation } from '@angular/core';
-import { BodyRow } from '../../model/list';
+import { BodyRow } from '../../model/state';
 
 @Component({
     selector: 'ngl-body-row',

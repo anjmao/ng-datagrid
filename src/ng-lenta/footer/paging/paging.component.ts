@@ -1,6 +1,7 @@
-import { Component, EventEmitter, Input, Output, OnChanges, ChangeDetectionStrategy, SimpleChanges } from '@angular/core';
-import { PagingConfig } from './paging-config';
+import { Component, EventEmitter, Input, 
+    Output, OnChanges, ChangeDetectionStrategy, SimpleChanges, ChangeDetectorRef } from '@angular/core';
 import { isNumber } from '../../util/value-util';
+import { Options } from '../../model/options';
 
 /**
  * A directive that will take care of visualising a pagination bar and enable / disable buttons correctly!
@@ -8,19 +9,19 @@ import { isNumber } from '../../util/value-util';
 @Component({
     selector: 'ngl-paging',
     changeDetection: ChangeDetectionStrategy.OnPush,
-    host: { 
+    host: {
         'role': 'navigation',
         'class': 'ngl-paging'
     },
     template: `
     <ul class="ngl-paging-list">
-      <li *ngIf="boundaryLinks" class="ngl-page-item"
+      <li class="ngl-page-item boundary-action-item"
         [class.disabled]="!hasPrevious() || disabled">
         <a aria-label="First" class="ngl-page-link" href (click)="!!selectPage(1)" [attr.tabindex]="(hasPrevious() ? null : '-1')">
           <span class="mdi mdi-page-first" aria-hidden="true"></span>
         </a>
       </li>
-      <li *ngIf="directionLinks" class="ngl-page-item"
+      <li class="ngl-page-item boundary-action-item"
         [class.disabled]="!hasPrevious() || disabled">
         <a aria-label="Previous" class="ngl-page-link" href (click)="!!selectPage(page-1)" [attr.tabindex]="(hasPrevious() ? null : '-1')">
             <span class="mdi mdi-chevron-left" aria-hidden="true"></span>
@@ -34,12 +35,12 @@ import { isNumber } from '../../util/value-util';
           <span *ngIf="pageNumber === page" class="sr-only">(current)</span>
         </a>
       </li>
-      <li *ngIf="directionLinks" class="ngl-page-item" [class.disabled]="!hasNext() || disabled">
+      <li class="ngl-page-item boundary-action-item" [class.disabled]="!hasNext() || disabled">
         <a aria-label="Next" class="ngl-page-link" href (click)="!!selectPage(page+1)" [attr.tabindex]="(hasNext() ? null : '-1')">
           <span class="mdi mdi-chevron-right" aria-hidden="true"></span>
         </a>
       </li>
-      <li *ngIf="boundaryLinks" class="ngl-page-item" [class.disabled]="!hasNext() || disabled">
+      <li class="ngl-page-item boundary-action-item" [class.disabled]="!hasNext() || disabled">
         <a aria-label="Last" class="ngl-page-link" href (click)="!!selectPage(pageCount)" [attr.tabindex]="(hasNext() ? null : '-1')">
           <span class="mdi mdi-page-last" aria-hidden="true"></span>
         </a>
@@ -51,55 +52,57 @@ export class PagingComponent implements OnChanges {
     pageCount = 0;
     pages: number[] = [];
 
-    @Input() disabled: boolean;
-    @Input() boundaryLinks: boolean;
-    @Input() directionLinks: boolean;
-    @Input() ellipses: boolean;
-    @Input() rotate: boolean;
-    @Input() collectionSize: number;
+    @Input() disabled = false;
+    @Input() totalCount: number;
     @Input() maxSize: number;
     @Input() page = 1;
     @Input() pageSize: number;
 
     @Output() pageChange = new EventEmitter<number>(true);
 
-    constructor(config: PagingConfig) {
-        this.disabled = config.disabled;
-        this.boundaryLinks = config.boundaryLinks;
-        this.directionLinks = config.directionLinks;
-        this.ellipses = config.ellipses;
-        this.maxSize = config.maxSize;
-        this.pageSize = config.pageSize;
-        this.rotate = config.rotate;
+    constructor(defaultOptions: Options, private _cd: ChangeDetectorRef) {
+        // TODO: handle options change
+        this.disabled = defaultOptions.paging.disabled;
+        this.maxSize = defaultOptions.paging.maxSize;
+        this.pageSize = defaultOptions.paging.pageSize;
     }
 
-    hasPrevious(): boolean { return this.page > 1; }
+    hasPrevious(): boolean {
+        return this.page > 1;
+    }
 
-    hasNext(): boolean { return this.page < this.pageCount; }
+    hasNext(): boolean {
+        return this.page < this.pageCount;
+    }
 
-    selectPage(pageNumber: number): void { this._updatePages(pageNumber); }
+    selectPage(pageNumber: number): void {
+        this._updatePages(pageNumber);
+        this._cd.markForCheck();
+    }
 
-    ngOnChanges(_: SimpleChanges): void { this._updatePages(this.page); }
+    ngOnChanges(_: SimpleChanges): void {
+        this._updatePages(this.page);
+    }
 
-    isEllipsis(pageNumber): boolean { return pageNumber === -1; }
+    isEllipsis(pageNumber): boolean {
+        return pageNumber === -1;
+    }
 
     /**
      * Appends ellipses and first/last page number to the displayed pages
      */
     private _applyEllipses(start: number, end: number) {
-        if (this.ellipses) {
-            if (start > 0) {
-                if (start > 1) {
-                    this.pages.unshift(-1);
-                }
-                this.pages.unshift(1);
+        if (start > 0) {
+            if (start > 1) {
+                this.pages.unshift(-1);
             }
-            if (end < this.pageCount) {
-                if (end < (this.pageCount - 1)) {
-                    this.pages.push(-1);
-                }
-                this.pages.push(this.pageCount);
+            this.pages.unshift(1);
+        }
+        if (end < this.pageCount) {
+            if (end < (this.pageCount - 1)) {
+                this.pages.push(-1);
             }
+            this.pages.push(this.pageCount);
         }
     }
 
@@ -132,28 +135,17 @@ export class PagingComponent implements OnChanges {
         return [start, end];
     }
 
-    /**
-     * Paginates page numbers based on maxSize items per page
-     */
-    private _applyPagination(): [number, number] {
-        let page = Math.ceil(this.page / this.maxSize) - 1;
-        let start = page * this.maxSize;
-        let end = start + this.maxSize;
-
-        return [start, end];
-    }
-
     private _setPageInRange(newPageNo) {
         const prevPageNo = this.page;
         this.page = this._getValueInRange(newPageNo, this.pageCount, 1);
 
-        if (this.page !== prevPageNo && isNumber(this.collectionSize)) {
+        if (this.page !== prevPageNo && isNumber(this.totalCount)) {
             this.pageChange.emit(this.page);
         }
     }
 
     private _updatePages(newPage: number) {
-        this.pageCount = Math.ceil(this.collectionSize / this.pageSize);
+        this.pageCount = Math.ceil(this.totalCount / this.pageSize);
 
         if (!isNumber(this.pageCount)) {
             this.pageCount = 0;
@@ -174,11 +166,7 @@ export class PagingComponent implements OnChanges {
             let end = this.pageCount;
 
             // either paginating or rotating page numbers
-            if (this.rotate) {
-                [start, end] = this._applyRotation();
-            } else {
-                [start, end] = this._applyPagination();
-            }
+            [start, end] = this._applyRotation();
 
             this.pages = this.pages.slice(start, end);
 

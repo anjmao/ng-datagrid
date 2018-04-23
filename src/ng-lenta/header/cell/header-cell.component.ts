@@ -1,5 +1,5 @@
 import { Component, OnInit, ChangeDetectionStrategy, Input, ViewEncapsulation } from '@angular/core';
-import { HeaderCell } from '../../model/list';
+import { HeaderCell } from '../../model/state';
 
 @Component({
     selector: 'ngl-header-cell',
