@@ -33,12 +33,7 @@ import { Options } from './model/options';
         'role': 'grid'
     },
     template: `
-        <ngl-header>
-            <ngl-header-cell *ngFor="let cell of state.headerCells"
-                [cell]="cell"
-                (sort)="sort($event)">
-            </ngl-header-cell>
-        </ngl-header>
+        <ngl-header [cells]="state.headerCells" (onSort)="sort($event)"></ngl-header>
         <ngl-body>
             <ngl-body-row *ngFor="let row of state.viewRows" [row]="row"></ngl-body-row>
         </ngl-body>
