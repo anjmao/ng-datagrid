@@ -4,11 +4,14 @@ import { LentaOptions } from '../public-types';
 @Injectable()
 export class Options {
     clientSide = true;
+    sorting = {
+        enabled: true
+    };
     paging = {
-        disabled: false,
-        maxSize: 0,
+        enabled: true,
+        maxSize: 5,
         pageSize: 10
-    }
+    };
 
     mergePublicOptions(options: LentaOptions) {
         // TODO: paging options are not updated in paging component

@@ -1,9 +1,16 @@
 import { Injectable, TemplateRef } from '@angular/core';
 import { LentaColumn } from '../public-types';
 import { isDefined } from '../util/value-util';
+import { Options } from './options';
+
+export enum SortOrder {
+    none = 0,
+    asc = 1,
+    desc = 2
+}
 
 export class BodyCell {
-    constructor(public value: any, public column: string, public template: TemplateRef<any>) { }
+    constructor(public value: any, public template: TemplateRef<any>) { }
 }
 
 export class BodyRow {
@@ -12,8 +19,18 @@ export class BodyRow {
 
 export class HeaderCell {
     public value: string;
-    constructor(col: LentaColumn) {
+    public sortable: boolean;
+    public sortOrder: SortOrder = 0;
+    constructor(public col: LentaColumn) {
         this.value = isDefined(col.name) ? col.name : col.prop;
+        this.sortable = col.sortable;
+    }
+
+    toggleSortOrder() {
+        this.sortOrder++;
+        if (this.sortOrder > 2) {
+            this.sortOrder = SortOrder.none;
+        }
     }
 }
 
@@ -25,11 +42,13 @@ export interface ViewTemplates {
 @Injectable()
 export class State {
     private _rows: BodyRow[] = [];
+    private _sortedRows: BodyRow[] = [];
     private _viewRows: BodyRow[] = [];
     private _colMap: Map<string, LentaColumn>;
     private _cols: LentaColumn[] = [];
     private _headerCells: HeaderCell[] = [];
     private _pageSize: number;
+    private _currentPage: number;
 
     get rows() {
         return this._rows;
@@ -51,14 +70,49 @@ export class State {
         this._pageSize = value;
     }
 
+    constructor(private _options: Options) { }
+
     setPage(page: number) {
+        this._currentPage = page;
         if (!isDefined(this._pageSize)) {
-            this._viewRows = [...this.rows];
+            this._viewRows = [...this._sortedRows];
             return;
         }
         const startIndex = (page - 1) * this._pageSize;
         const endIndex = startIndex + this._pageSize;
-        this._viewRows = [...this.rows.slice(startIndex, endIndex)];
+        this._viewRows = [...this._sortedRows.slice(startIndex, endIndex)];
+    }
+
+    sort(cell: HeaderCell) {
+        if (cell.sortOrder === SortOrder.none) {
+            this._sortedRows = [...this._rows];
+        }
+        this._sortedRows.sort((a: BodyRow, b: BodyRow) => {
+            const propA = a.ref[cell.col.prop];
+            const propB = b.ref[cell.col.prop];
+            if (!isDefined(propA) || !isDefined(propB)) {
+                return 0;
+            }
+            const nameA = propA.toString().toUpperCase();
+            const nameB = propB.toString().toUpperCase();
+            if (cell.sortOrder === SortOrder.asc) {
+                if (nameA < nameB) {
+                    return -1;
+                }
+                if (nameA > nameB) {
+                    return 1;
+                }
+            } else if (cell.sortOrder === SortOrder.desc) {
+                if (nameA > nameB) {
+                    return -1;
+                }
+                if (nameA < nameB) {
+                    return 1;
+                }
+            }
+            return 0;
+        });
+        this.setPage(this._currentPage);
     }
 
     setRows(rows: any[], templates: ViewTemplates) {
@@ -75,10 +129,11 @@ export class State {
                 }
                 const cellTemplate = templates.bodyCellTemplates && templates.bodyCellTemplates.get(col.prop);
                 const value = row[col.prop];
-                cells.push(new BodyCell(value, col.prop, cellTemplate));
+                cells.push(new BodyCell(value, cellTemplate));
             }
             this._rows.push(new BodyRow(row, cells, templates.bodyRowTemplate));
         }
+        this._sortedRows = [...this._rows];
     }
 
     setColumns(cols: LentaColumn[]) {
@@ -86,6 +141,9 @@ export class State {
         this._cols = cols;
         this._colMap = new Map<string, LentaColumn>();
         for (const col of this._cols) {
+            if (!isDefined(col.sortable)) {
+                col.sortable = this._options.sorting.enabled;
+            }
             this._headerCells.push(new HeaderCell(col))
             this._colMap.set(col.prop, col);
         }

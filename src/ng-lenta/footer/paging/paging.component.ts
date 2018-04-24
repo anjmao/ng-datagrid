@@ -3,9 +3,6 @@ import { Component, EventEmitter, Input,
 import { isNumber } from '../../util/value-util';
 import { Options } from '../../model/options';
 
-/**
- * A directive that will take care of visualising a pagination bar and enable / disable buttons correctly!
- */
 @Component({
     selector: 'ngl-paging',
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -62,7 +59,7 @@ export class PagingComponent implements OnChanges {
 
     constructor(defaultOptions: Options, private _cd: ChangeDetectorRef) {
         // TODO: handle options change
-        this.disabled = defaultOptions.paging.disabled;
+        this.disabled = !defaultOptions.paging.enabled;
         this.maxSize = defaultOptions.paging.maxSize;
         this.pageSize = defaultOptions.paging.pageSize;
     }
@@ -88,9 +85,6 @@ export class PagingComponent implements OnChanges {
         return pageNumber === -1;
     }
 
-    /**
-     * Appends ellipses and first/last page number to the displayed pages
-     */
     private _applyEllipses(start: number, end: number) {
         if (start > 0) {
             if (start > 1) {

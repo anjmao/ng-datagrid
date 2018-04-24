@@ -1,12 +1,13 @@
 export interface LentaColumn {
     prop: string;
     name?: string;
+    sortable?: boolean;
 }
 
 export interface LentaOptions {
     clientSide?: boolean;
     paging?: {
-        disabled?: boolean,
+        enabled?: boolean,
         maxSize?: number,
         pageSize?: number
     }

@@ -14,7 +14,7 @@ import {
     OnDestroy
 } from '@angular/core';
 
-import { State, ViewTemplates } from './model/state';
+import { State, ViewTemplates, HeaderCell } from './model/state';
 import { LentaColumn, LentaOptions } from './public-types';
 import { BodyCellTemplateDirective } from './body/cell/body-cell-template.directive';
 import { BodyRowTemplateDirective } from './body/row/body-row-template.directive';
@@ -34,7 +34,10 @@ import { Options } from './model/options';
     },
     template: `
         <ngl-header>
-            <ngl-header-cell *ngFor="let cell of state.headerCells"[cell]="cell"></ngl-header-cell>
+            <ngl-header-cell *ngFor="let cell of state.headerCells"
+                [cell]="cell"
+                (sort)="sort($event)">
+            </ngl-header-cell>
         </ngl-header>
         <ngl-body>
             <ngl-body-row *ngFor="let row of state.viewRows" [row]="row"></ngl-body-row>
@@ -100,6 +103,11 @@ export class NgLentaComponent implements OnInit, OnChanges, OnDestroy {
 
     changePage(page: number) {
         this.state.setPage(page);
+        this._cd.markForCheck();
+    }
+
+    sort(cell: HeaderCell) {
+        this.state.sort(cell);
         this._cd.markForCheck();
     }
 

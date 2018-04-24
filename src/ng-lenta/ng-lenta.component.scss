@@ -11,6 +11,10 @@
     
         .ngl-header-cell {
             flex: 1;
+
+            &.ngl-cell-sortable {
+                cursor: pointer;
+            }
         }
     }
     

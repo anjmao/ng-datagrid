@@ -7,7 +7,9 @@ import { delay } from 'rxjs/operators';
     selector: 'data-source',
     template: `
         <div class="mb-5">
-            <button (click)="changeRows()">Change rows</button>
+        <button (click)="showAllRows()">Show all rows</button>
+            <button (click)="changeRows()">Slice rows(0-5)</button>
+            <button (click)="clearRows()">Clear rows</button>
         </div>
         <ng-lenta [rows]="people" [columns]="columns" [options]="options">
             <ng-template ngl-cell="email" let-row="row">
@@ -21,6 +23,7 @@ import { delay } from 'rxjs/operators';
 })
 export class DataSourceExample implements OnInit {
 
+    allPeople: Person[] = [];
     people: Person[] = [];
     columns: LentaColumn[] = [
         { prop: 'name', name: 'Name' },
@@ -31,8 +34,7 @@ export class DataSourceExample implements OnInit {
     page = 1;
     totalCount: number;
     options: LentaOptions = {
-        clientSide: true,
-        paging: {}
+        clientSide: true
     }
 
     constructor(private dataService: DataService) { }
@@ -40,11 +42,20 @@ export class DataSourceExample implements OnInit {
     ngOnInit() { 
         this.dataService.getPeople().pipe(delay(500)).subscribe((p) => {
             this.totalCount = p.length;
-            this.people = [...p, ...p, ...p, ...p, ...p, ...p];
+            this.allPeople = [...p, ...p, ...p, ...p, ...p, ...p];
+            this.people = this.allPeople;
         });
     }
 
+    showAllRows() {
+        this.people = [...this.allPeople];
+    }
+
     changeRows() {
-        this.people = [...this.people.slice(0, 5)];
+        this.people = [...this.allPeople.slice(0, 5)];
+    }
+
+    clearRows() {
+        this.people = [];
     }
 }
