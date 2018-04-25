@@ -4,9 +4,9 @@ import { isDefined } from '../util/value-util';
 import { Options } from './options';
 
 export enum SortOrder {
-    none = 0,
-    asc = 1,
-    desc = 2
+    none = 'none',
+    asc = 'asc',
+    desc = 'desc'
 }
 
 export class BodyCell {
@@ -18,18 +18,26 @@ export class BodyRow {
 }
 
 export class HeaderCell {
-    public value: string;
-    public sortable: boolean;
-    public sortOrder: SortOrder = 0;
+    value: string;
+    sortable: boolean;
+    sortOrder: SortOrder = SortOrder.none;
+    hideSortIcon = false;
     constructor(public col: LentaColumn) {
         this.value = isDefined(col.name) ? col.name : col.prop;
         this.sortable = col.sortable;
     }
 
     toggleSortOrder() {
-        this.sortOrder++;
-        if (this.sortOrder > 2) {
+        switch (this.sortOrder) {
+            case SortOrder.none:
+            this.sortOrder = SortOrder.asc;
+            break;
+            case SortOrder.asc:
+            this.sortOrder = SortOrder.desc;
+            break;
+            case SortOrder.desc:
             this.sortOrder = SortOrder.none;
+            break;
         }
     }
 }
@@ -86,6 +94,8 @@ export class State {
     sort(cell: HeaderCell) {
         if (cell.sortOrder === SortOrder.none) {
             this._sortedRows = [...this._rows];
+            this.setPage(this._currentPage);
+            return;
         }
         this._sortedRows.sort((a: BodyRow, b: BodyRow) => {
             const propA = a.ref[cell.col.prop];

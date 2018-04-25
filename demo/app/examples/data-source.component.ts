@@ -16,7 +16,8 @@ import { delay } from 'rxjs/operators';
                 <b>{{row.email}}</b>
             </ng-template>
             <ng-template ngl-cell="isActive" let-row="row">
-                <i *ngIf="row.isActive" class="mdi mdi-check mdi-18px text-success" aria-hidden="true"></i>
+                <i *ngIf="row.isActive" class="mdi mdi-check mdi-18px text-success"></i>
+                <i *ngIf="!row.isActive" class="mdi mdi-close mdi-18px text-danger"></i>
             </ng-template>
         </ng-lenta>
     `
@@ -29,6 +30,7 @@ export class DataSourceExample implements OnInit {
         { prop: 'name', name: 'Name' },
         { prop: 'email', name: 'Email' },
         { prop: 'company', name: 'Company' },
+        { prop: 'age', name: 'Age' },
         { prop: 'isActive', name: 'Active' }
     ];
     page = 1;
