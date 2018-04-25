@@ -4,6 +4,7 @@ import { LentaOptions } from '../public-types';
 @Injectable()
 export class Options {
     clientSide = true;
+    autoLayout = true;
     sorting = {
         enabled: true
     };

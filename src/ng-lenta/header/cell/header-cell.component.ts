@@ -10,12 +10,12 @@ import { HeaderCell } from '../../model/state';
         'role': 'columnheader'
     },
     template: `
-        <span class="ngl-header-cell-value">{{cell.value}}</span>
+        <span class="ngl-header-cell-value">{{cell?.value}}</span>
         <span class="ngl-sort-icon"></span>
     `
 })
 export class HeaderCellComponent implements OnInit {
-    @Input() cell: HeaderCell;
+    @Input() cell: HeaderCell | null = null;
 
     constructor() { }
 

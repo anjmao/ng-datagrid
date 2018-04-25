@@ -16,7 +16,7 @@ $border-color: rgba(0,0,0,.12);
         padding: 0 24px;
     
         .ngl-header-cell {
-            flex: 1;
+            flex: none;
             font-size: 12px;
             font-weight: bold;
             color: rgba(0, 0, 0, 0.54);
@@ -58,7 +58,7 @@ $border-color: rgba(0,0,0,.12);
     
         .ngl-body-cell {
             font-size: 13px;
-            flex: 1;
+            flex: none;
             display: block;
             overflow: hidden;
             word-wrap: break-word;

@@ -34,14 +34,14 @@ export class DataSourceExample implements OnInit {
         { prop: 'isActive', name: 'Active' }
     ];
     page = 1;
-    totalCount: number;
+    totalCount = 0;
     options: LentaOptions = {
         clientSide: true
     }
 
     constructor(private dataService: DataService) { }
 
-    ngOnInit() { 
+    ngOnInit() {
         this.dataService.getPeople().pipe(delay(500)).subscribe((p) => {
             this.totalCount = p.length;
             this.allPeople = [...p, ...p, ...p, ...p, ...p, ...p];

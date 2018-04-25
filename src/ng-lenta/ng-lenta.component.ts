@@ -15,6 +15,7 @@ import {
 } from '@angular/core';
 
 import { State, ViewTemplates, HeaderCell } from './model/state';
+import { AutoLayout } from './model/autolayout';
 import { LentaColumn, LentaOptions } from './public-types';
 import { BodyCellTemplateDirective } from './body/cell/body-cell-template.directive';
 import { BodyRowTemplateDirective } from './body/row/body-row-template.directive';
@@ -24,7 +25,7 @@ import { Options } from './model/options';
 
 @Component({
     selector: 'ng-lenta',
-    providers: [State],
+    providers: [State, AutoLayout],
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None,
     styleUrls: ['./ng-lenta.component.scss'],
@@ -50,11 +51,11 @@ export class NgLentaComponent implements OnInit, OnChanges, OnDestroy {
     @Input() rows: any[] = [];
     @Input() columns: LentaColumn[] = [];
     @Input() page = 1;
-    @Input() totalCount: number;
+    @Input() totalCount = 0;
     @Input() options: LentaOptions;
 
-    @ContentChildren(BodyCellTemplateDirective) bodyCellTemplates: QueryList<BodyCellTemplateDirective>;
-    @ContentChild(BodyRowTemplateDirective) bodyRowTemplate: BodyRowTemplateDirective;
+    @ContentChildren(BodyCellTemplateDirective) bodyCellTemplates: QueryList<BodyCellTemplateDirective> | null = null;
+    @ContentChild(BodyRowTemplateDirective) bodyRowTemplate: BodyRowTemplateDirective | null = null;
 
     private _pendingRows$ = new Subject<any[]>();
     private _destroy$ = new Subject<void>();
@@ -62,8 +63,10 @@ export class NgLentaComponent implements OnInit, OnChanges, OnDestroy {
     constructor(
         public state: State,
         private _options: Options,
+        private _autoLayout: AutoLayout,
         private _cd: ChangeDetectorRef
-    ) { 
+    ) {
+        this.options = this._options;
         this.state.pageSize = this._options.paging.pageSize;
     }
 
@@ -88,6 +91,8 @@ export class NgLentaComponent implements OnInit, OnChanges, OnDestroy {
             }
             this._setRows(rows);
             this.state.setPage(this.page);
+            this._cd.detectChanges();
+            console.log('render done', this._autoLayout.done())
         });
     }
 
@@ -116,7 +121,7 @@ export class NgLentaComponent implements OnInit, OnChanges, OnDestroy {
             bodyRowTemplate: this.bodyRowTemplate ? this.bodyRowTemplate.templateRef : null
         };
 
-        if (!templates.bodyRowTemplate) {
+        if (!templates.bodyRowTemplate && this.bodyCellTemplates) {
             const cellTemplatesRefMap = new Map<string, TemplateRef<any>>();
             this.bodyCellTemplates.forEach((t) => {
                 cellTemplatesRefMap.set(t.column, t.templateRef);

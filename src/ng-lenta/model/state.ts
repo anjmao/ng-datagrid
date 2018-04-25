@@ -10,41 +10,41 @@ export enum SortOrder {
 }
 
 export class BodyCell {
-    constructor(public value: any, public template: TemplateRef<any>) { }
+    constructor(public value: any, public col: LentaColumn, public template: TemplateRef<any> | null | undefined) { }
 }
 
 export class BodyRow {
-    constructor(public ref: any, public cells: BodyCell[], public template: TemplateRef<any>) { }
+    constructor(public ref: any, public cells: BodyCell[], public template: TemplateRef<any> | null | undefined) { }
 }
 
 export class HeaderCell {
-    value: string;
+    value = '';
     sortable: boolean;
-    sortOrder: SortOrder = SortOrder.none;
+    sortOrder = SortOrder.none;
     hideSortIcon = false;
     constructor(public col: LentaColumn) {
-        this.value = isDefined(col.name) ? col.name : col.prop;
-        this.sortable = col.sortable;
+        this.value = isDefined(col.name) ? <string>col.name : col.prop;
+        this.sortable = col.sortable || true;
     }
 
     toggleSortOrder() {
         switch (this.sortOrder) {
             case SortOrder.none:
-            this.sortOrder = SortOrder.asc;
-            break;
+                this.sortOrder = SortOrder.asc;
+                break;
             case SortOrder.asc:
-            this.sortOrder = SortOrder.desc;
-            break;
+                this.sortOrder = SortOrder.desc;
+                break;
             case SortOrder.desc:
-            this.sortOrder = SortOrder.none;
-            break;
+                this.sortOrder = SortOrder.none;
+                break;
         }
     }
 }
 
 export interface ViewTemplates {
-    bodyCellTemplates: Map<string, TemplateRef<any>>;
-    bodyRowTemplate: TemplateRef<any>
+    bodyCellTemplates: Map<string, TemplateRef<any>> | null;
+    bodyRowTemplate: TemplateRef<any> | null
 }
 
 @Injectable()
@@ -52,11 +52,11 @@ export class State {
     private _rows: BodyRow[] = [];
     private _sortedRows: BodyRow[] = [];
     private _viewRows: BodyRow[] = [];
-    private _colMap: Map<string, LentaColumn>;
+    private _colMap = new Map<string, LentaColumn>();
     private _cols: LentaColumn[] = [];
     private _headerCells: HeaderCell[] = [];
-    private _pageSize: number;
-    private _currentPage: number;
+    private _pageSize = 0;
+    private _currentPage = 1;
 
     get rows() {
         return this._rows;
@@ -78,7 +78,9 @@ export class State {
         this._pageSize = value;
     }
 
-    constructor(private _options: Options) { }
+    constructor(private _options: Options) {
+        this._pageSize = _options.paging.pageSize;
+    }
 
     setPage(page: number) {
         this._currentPage = page;
@@ -139,7 +141,7 @@ export class State {
                 }
                 const cellTemplate = templates.bodyCellTemplates && templates.bodyCellTemplates.get(col.prop);
                 const value = row[col.prop];
-                cells.push(new BodyCell(value, cellTemplate));
+                cells.push(new BodyCell(value, col, cellTemplate));
             }
             this._rows.push(new BodyRow(row, cells, templates.bodyRowTemplate));
         }

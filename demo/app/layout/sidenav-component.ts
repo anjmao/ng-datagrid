@@ -12,12 +12,12 @@ import { appRoutes } from '../app.module';
     `
 })
 export class LayoutSidenavComponent {
-    routes = [];
+    routes: any[] = [];
 
     constructor() {
         this.routes = appRoutes.filter(route => route.component)
             .map(route => ({
-                title: route.data.title,
+                title: (<any>route.data).title,
                 url: `/${route.path}`
             }));
     }

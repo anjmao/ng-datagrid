@@ -19,7 +19,7 @@ export interface Person {
 export class DataService {
     constructor(private http: HttpClient) { }
 
-    getGithubAccounts(term: string = null) {
+    getGithubAccounts(term: string = '') {
         if (term) {
             return this.http.get<any>(`https://api.github.com/search/users?q=${term}`).pipe(map(rsp => rsp.items));
         } else {
@@ -35,7 +35,7 @@ export class DataService {
         return this.http.get<any[]>('https://jsonplaceholder.typicode.com/photos');
     }
 
-    getPeople(term: string = null): Observable<Person[]> {
+    getPeople(term: string = ''): Observable<Person[]> {
         let items = getMockPeople();
         if (term) {
             items = items.filter(x => x.name.toLocaleLowerCase().indexOf(term.toLocaleLowerCase()) > -1);

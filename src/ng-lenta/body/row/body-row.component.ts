@@ -1,5 +1,6 @@
 import { Component, OnInit, Input, ChangeDetectionStrategy, ViewEncapsulation } from '@angular/core';
 import { BodyRow } from '../../model/state';
+import { AutoLayout } from '../../model/autolayout';
 
 @Component({
     selector: 'ngl-body-row',
@@ -11,20 +12,31 @@ import { BodyRow } from '../../model/state';
     },
     template: `
         <ng-template #defaultTemplate>
-            <ngl-body-cell *ngFor="let cell of row.cells" [row]="row" [cell]="cell"></ngl-body-cell>
+            <ngl-body-cell 
+                *ngFor="let cell of row?.cells"
+                [ngStyle]="cell.col.size"
+                [row]="row"
+                [cell]="cell">
+            </ngl-body-cell>
         </ng-template>
 
         <ng-template
-            [ngTemplateOutlet]="row.template || defaultTemplate"
+            [ngTemplateOutlet]="row?.template || defaultTemplate"
             [ngTemplateOutletContext]="{ row: row.ref }">
         </ng-template>
     `
 })
 export class BodyRowComponent implements OnInit {
 
-    @Input() row: BodyRow;
+    @Input() row: BodyRow | null = null;
 
-    constructor() { }
+    size = null;
 
-    ngOnInit() { }
+    constructor(private _autoLayout: AutoLayout) { }
+
+    ngOnInit() {
+        this._autoLayout.done$.subscribe((size) => {
+            console.log(size)
+        });
+    }
 }

@@ -50,7 +50,7 @@ export class PagingComponent implements OnChanges {
     pages: number[] = [];
 
     @Input() disabled = false;
-    @Input() totalCount: number;
+    @Input() totalCount = 0;
     @Input() maxSize: number;
     @Input() page = 1;
     @Input() pageSize: number;
