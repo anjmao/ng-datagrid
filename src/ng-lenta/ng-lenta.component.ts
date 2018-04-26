@@ -15,12 +15,12 @@ import {
 } from '@angular/core';
 
 import { State, ViewTemplates, HeaderCell } from './model/state';
-import { LentaColumn, LentaOptions } from './public-types';
+import { LentaColumn } from './model/lenta-column';
 import { BodyCellTemplateDirective } from './body/cell/body-cell-template.directive';
 import { BodyRowTemplateDirective } from './body/row/body-row-template.directive';
 import { Subject } from 'rxjs/Subject';
 import { takeUntil } from 'rxjs/operators';
-import { Options } from './model/options';
+import { LentaOptions } from './model/lenta-options';
 
 @Component({
     selector: 'ng-lenta',
@@ -41,6 +41,8 @@ import { Options } from './model/options';
             <ngl-paging
                 (pageChange)="changePage($event)"
                 [totalCount]="totalCount"
+                [maxSize]="options.paging.maxSize"
+                [pageSize]="options.paging.pageSize"
                 [page]="page">
             </ngl-paging>
         </ngl-footer>
@@ -61,7 +63,7 @@ export class NgLentaComponent implements OnInit, OnChanges, OnDestroy {
 
     constructor(
         public state: State,
-        private _options: Options,
+        private _options: LentaOptions,
         private _cd: ChangeDetectorRef
     ) {
         this.options = this._options;
@@ -69,7 +71,7 @@ export class NgLentaComponent implements OnInit, OnChanges, OnDestroy {
     }
 
     ngOnInit() {
-        this._options.mergePublicOptions(this.options);
+        this._options.mergeInput(this.options);
     }
 
     ngOnChanges(changes: SimpleChanges) {

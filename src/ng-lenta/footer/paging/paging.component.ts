@@ -1,7 +1,6 @@
 import { Component, EventEmitter, Input, 
     Output, OnChanges, ChangeDetectionStrategy, SimpleChanges, ChangeDetectorRef } from '@angular/core';
 import { isNumber } from '../../util/value-util';
-import { Options } from '../../model/options';
 
 @Component({
     selector: 'ngl-paging',
@@ -51,17 +50,13 @@ export class PagingComponent implements OnChanges {
 
     @Input() disabled = false;
     @Input() totalCount = 0;
-    @Input() maxSize: number;
+    @Input() maxSize = 0;
     @Input() page = 1;
-    @Input() pageSize: number;
+    @Input() pageSize = 0;
 
     @Output() pageChange = new EventEmitter<number>(true);
 
-    constructor(defaultOptions: Options, private _cd: ChangeDetectorRef) {
-        // TODO: handle options change
-        this.disabled = !defaultOptions.paging.enabled;
-        this.maxSize = defaultOptions.paging.maxSize;
-        this.pageSize = defaultOptions.paging.pageSize;
+    constructor(private _cd: ChangeDetectorRef) {
     }
 
     hasPrevious(): boolean {

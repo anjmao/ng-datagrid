@@ -1,7 +1,7 @@
 import { Injectable, TemplateRef } from '@angular/core';
-import { LentaColumn } from '../public-types';
+import { LentaColumn } from './lenta-column';
 import { isDefined } from '../util/value-util';
-import { Options } from './options';
+import { LentaOptions } from './lenta-options';
 
 export enum SortOrder {
     none = 'none',
@@ -78,7 +78,7 @@ export class State {
         this._pageSize = value;
     }
 
-    constructor(private _options: Options) {
+    constructor(private _options: LentaOptions) {
         this._pageSize = _options.paging.pageSize;
     }
 
@@ -129,7 +129,7 @@ export class State {
 
     setRows(rows: any[], templates: ViewTemplates) {
         if (rows.length > 0 && !this._colMap) {
-            throw new Error('Columns should be set.');
+            throw new Error('Columns should be set first.');
         }
 
         this._rows = [];

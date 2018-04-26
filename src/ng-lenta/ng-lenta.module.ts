@@ -10,7 +10,7 @@ import { BodyComponent } from './body/body.component';
 import { BodyCellTemplateDirective } from './body/cell/body-cell-template.directive';
 import { BodyRowTemplateDirective } from './body/row/body-row-template.directive';
 import { PagingComponent } from './footer/paging/paging.component';
-import { Options } from './model/options';
+import { LentaOptions } from './model/lenta-options';
 
 @NgModule({
     imports: [
@@ -34,7 +34,7 @@ import { Options } from './model/options';
         PagingComponent
     ],
     providers: [
-        Options
+        LentaOptions,
     ],
 })
 export class NgLentaModule { }

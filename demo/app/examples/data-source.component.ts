@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { DataService, Person } from '../shared/data.service';
-import { LentaColumn, LentaOptions } from '../../../src/ng-lenta/public-types';
+import { LentaColumn, LentaOptions, LentaColumns } from 'ng-lenta';
 import { delay } from 'rxjs/operators';
 
 @Component({
@@ -26,18 +26,19 @@ export class DataSourceExample implements OnInit {
 
     allPeople: Person[] = [];
     people: Person[] = [];
-    columns: LentaColumn[] = [
+    columns: LentaColumn[] = LentaColumns.create([
         { prop: 'name', name: 'Name' },
         { prop: 'email', name: 'Email', size: { flex: '2'} },
         { prop: 'company', name: 'Company' },
         { prop: 'age', name: 'Age' },
         { prop: 'isActive', name: 'Active', size: { width: '80px'} }
-    ];
+    ]);
+    
     page = 1;
     totalCount = 0;
-    options: LentaOptions = {
+    options = new LentaOptions({
         clientSide: true
-    }
+    });
 
     constructor(private dataService: DataService) { }
 
