@@ -28,10 +28,10 @@ export class DataSourceExample implements OnInit {
     people: Person[] = [];
     columns: LentaColumn[] = [
         { prop: 'name', name: 'Name' },
-        { prop: 'email', name: 'Email' },
+        { prop: 'email', name: 'Email', size: { flex: '2'} },
         { prop: 'company', name: 'Company' },
         { prop: 'age', name: 'Age' },
-        { prop: 'isActive', name: 'Active' }
+        { prop: 'isActive', name: 'Active', size: { width: '80px'} }
     ];
     page = 1;
     totalCount = 0;

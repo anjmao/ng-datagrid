@@ -15,6 +15,8 @@ import { HeaderCell, SortOrder } from '../model/state';
             [class.ngl-sort-asc]="cell.sortOrder === 'asc'"
             [class.ngl-sort-desc]="cell.sortOrder === 'desc'"
             [ngStyle]="cell.col.size"
+            [class.ngl-flex-1]="!cell.col.size"
+            ngClass="ngl-header-{{cell.col.prop}}-cell"
             (click)="sort(cell)"
             [cell]="cell"
             (sort)="sort(cell)">

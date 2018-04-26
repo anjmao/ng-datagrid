@@ -15,7 +15,6 @@ import {
 } from '@angular/core';
 
 import { State, ViewTemplates, HeaderCell } from './model/state';
-import { AutoLayout } from './model/autolayout';
 import { LentaColumn, LentaOptions } from './public-types';
 import { BodyCellTemplateDirective } from './body/cell/body-cell-template.directive';
 import { BodyRowTemplateDirective } from './body/row/body-row-template.directive';
@@ -25,7 +24,7 @@ import { Options } from './model/options';
 
 @Component({
     selector: 'ng-lenta',
-    providers: [State, AutoLayout],
+    providers: [State],
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None,
     styleUrls: ['./ng-lenta.component.scss'],
@@ -63,7 +62,6 @@ export class NgLentaComponent implements OnInit, OnChanges, OnDestroy {
     constructor(
         public state: State,
         private _options: Options,
-        private _autoLayout: AutoLayout,
         private _cd: ChangeDetectorRef
     ) {
         this.options = this._options;
@@ -91,8 +89,6 @@ export class NgLentaComponent implements OnInit, OnChanges, OnDestroy {
             }
             this._setRows(rows);
             this.state.setPage(this.page);
-            this._cd.detectChanges();
-            console.log('render done', this._autoLayout.done())
         });
     }
 
