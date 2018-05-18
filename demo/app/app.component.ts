@@ -11,9 +11,9 @@ import { filter, map, mergeMap } from 'rxjs/operators';
 })
 export class AppComponent {
 
-    title: string;
+    title = '';
     version: string = window['ngSelectVersion'];
-    exampleSourceUrl: string;
+    exampleSourceUrl = '';
 
     constructor(private router: Router,
         private activatedRoute: ActivatedRoute,

@@ -18,7 +18,7 @@ import { State, ViewTemplates, HeaderCell } from './model/state';
 import { LentaColumn } from './model/lenta-column';
 import { BodyCellTemplateDirective } from './body/cell/body-cell-template.directive';
 import { BodyRowTemplateDirective } from './body/row/body-row-template.directive';
-import { Subject } from 'rxjs/Subject';
+import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { LentaOptions } from './model/lenta-options';
 
@@ -60,7 +60,6 @@ export class NgLentaComponent implements OnInit, OnChanges, OnDestroy {
 
     private _pendingRows$ = new Subject<any[]>();
     private _destroy$ = new Subject<void>();
-
     constructor(
         public state: State,
         private _options: LentaOptions,

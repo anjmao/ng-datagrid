@@ -2,27 +2,26 @@ const path = require('path');
 const webpack = require('webpack');
 
 // Webpack Plugins
-const CommonsChunkPlugin = webpack.optimize.CommonsChunkPlugin;
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 const {TsConfigPathsPlugin} = require('awesome-typescript-loader');
+const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
 
 const root = path.join.bind(path, path.resolve(__dirname, '..'));
-
-const ENV = process.env.npm_lifecycle_event;
-const isProd = ENV === 'build:demo';
+const isProd = !process.env.WEBPACK_SERVE;
 
 module.exports = function makeWebpackConfig() {
     let config = {
         devtool: isProd ? 'source-map' : 'eval-source-map',
+        mode: process.env.WEBPACK_SERVE ? 'development' : 'production',
         entry: {
+            'polyfills': './demo/polyfills.ts',
             'app': './demo/main.ts',
-            'polyfills': './demo/polyfills.ts'
         },
         output: {
             path: root('dist'),
-            publicPath: isProd ? 'ng-select' : 'http://localhost:8080/',
+            publicPath: isProd ? 'ng-lenta' : 'http://localhost:8080/',
             filename: isProd ? 'js/[name].[hash].js' : 'js/[name].js',
             chunkFilename: isProd ? '[id].[hash].chunk.js' : '[id].chunk.js'
         },
@@ -35,6 +34,16 @@ module.exports = function makeWebpackConfig() {
                 })
             ]
         },
+        optimization: {
+            splitChunks: {
+                name: 'polyfills',
+                minChunks: 2
+            },
+            minimizer: [
+                new UglifyJsPlugin({ sourceMap: false })
+            ]
+        },
+        performance: { hints: false },
         module: {
             rules: [
                 {
@@ -79,7 +88,10 @@ module.exports = function makeWebpackConfig() {
                 },
                 
                 // support for .html as raw text
-                {test: /\.html$/, loader: ['raw-loader', 'ng-snippets-loader'], exclude: root('src', 'public')}
+                {test: /\.html$/, loader: ['raw-loader', 'ng-snippets-loader'], exclude: root('src', 'public')},
+
+                // Ignore warnings about System.import in Angular
+                { test: /[\/\\]@angular[\/\\].+\.js$/, parser: { system: true } }
             ]
         },
         plugins: [
@@ -98,10 +110,6 @@ module.exports = function makeWebpackConfig() {
                         failOnHint: false
                     }
                 }
-            }),
-
-            new CommonsChunkPlugin({
-                names: ['polyfills']
             }),
 
             new HtmlWebpackPlugin({
@@ -126,15 +134,6 @@ module.exports = function makeWebpackConfig() {
             stats: { colors: true }
         }
     };
-
-
-    // Add build specific plugins
-    if (isProd) {
-        config.plugins.push(
-            new webpack.NoEmitOnErrorsPlugin(),
-            new webpack.optimize.UglifyJsPlugin({sourceMap: true, mangle: {keep_fnames: true}})
-        );
-    }
 
     return config;
 }();

@@ -31,7 +31,7 @@ export class LentaOptions {
         pageSize: 10
     };
 
-    constructor(@Optional() @Inject(LENTA_OPTIONS_CTOR) opts: LentaOptionsCtor) {
+    constructor(@Optional() @Inject(LENTA_OPTIONS_CTOR) opts: LentaOptionsCtor | null) {
         if (!opts) {
             return;
         }

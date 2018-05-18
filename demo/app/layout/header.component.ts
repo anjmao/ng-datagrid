@@ -44,7 +44,7 @@ const defaultTheme = require('./../../../src/themes/default.theme.scss');
 })
 export class LayoutHeaderComponent implements OnInit {
     theme = 'Default theme';
-    @Input() version: string;
+    @Input() version = '';
 
     ngOnInit() {
         defaultTheme.use();

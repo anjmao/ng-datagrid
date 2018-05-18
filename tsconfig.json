@@ -15,7 +15,7 @@
     "noUnusedParameters": true,
     "strict": true,
     "lib": [
-      "es2015",
+      "es2017",
       "dom"
     ],
     "typeRoots": [

@@ -1,13 +1,9 @@
 {
-  "extends": "./tsconfig.json",
-  "compilerOptions": {
-    "baseUrl": "",
-    "module": "commonjs",
-    "declaration": false,
-    "emitDecoratorMetadata": true,
-    "noEmitHelpers": true
-  },
-  "include": [
-    "src/**/*"
-  ]
+    "extends": "./tsconfig.json",
+    "compilerOptions": {
+        "module": "commonjs",
+        "noEmitHelpers": true,
+        "importHelpers": true,
+        "emitDecoratorMetadata": true
+    }
 }

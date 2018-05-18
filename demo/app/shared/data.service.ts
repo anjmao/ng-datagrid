@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs/Observable';
+import { Observable } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 import { map, delay } from 'rxjs/operators';
-import { of} from 'rxjs/observable/of';
+import { of} from 'rxjs';
 
 export interface Person {
     id: string;

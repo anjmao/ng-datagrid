@@ -43,16 +43,6 @@ export const appRoutes: Routes = [
     ],
     providers: [
         DataService,
-        // {
-        //     provide: NG_SELECT_DEFAULT_CONFIG,
-        //     useValue: {
-        //         notFoundText: 'Items not found',
-        //         addTagText: 'Add item',
-        //         typeToSearchText: 'Type to search',
-        //         loadingText: 'Loading...',
-        //         clearAllText: 'Clear all'
-        //     }
-        // }
     ],
     declarations: [
         AppComponent,

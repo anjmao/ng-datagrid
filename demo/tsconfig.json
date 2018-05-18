@@ -1,13 +1,13 @@
 {
   "extends": "../tsconfig.json",
   "compilerOptions": {
-    "baseUrl": "tsconfig",
-    "module": "commonjs",
+    "baseUrl": "./",
+    "module": "es2015",
     "declaration": false,
     "emitDecoratorMetadata": true,
     "paths": {
       "ng-lenta": [
-        "../../src"
+        "../src"
       ]
     }
   },
