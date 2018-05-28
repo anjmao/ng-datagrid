@@ -20,6 +20,5 @@ export class HeaderCellComponent implements OnInit {
     constructor() { }
 
     ngOnInit() {
-        console.log('init');
     }
 }
