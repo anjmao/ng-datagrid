@@ -7,9 +7,9 @@ import { delay } from 'rxjs/operators';
     selector: 'data-source',
     template: `
         <div class="mb-5">
-        <button (click)="showAllRows()">Show all rows</button>
-            <button (click)="changeRows()">Slice rows(0-5)</button>
-            <button (click)="clearRows()">Clear rows</button>
+            <button class="btn btn-link" (click)="showAllRows()">Show all rows</button>
+            <button class="btn btn-link" (click)="changeRows()">Slice rows(0-5)</button>
+            <button class="btn btn-link" (click)="clearRows()">Clear rows</button>
         </div>
         <ng-lenta [rows]="people" [columns]="columns" [options]="options">
             <ng-template ngl-cell="email" let-row="row">

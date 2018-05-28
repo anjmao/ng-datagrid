@@ -48,7 +48,7 @@ export interface ViewTemplates {
 }
 
 @Injectable()
-export class State {
+export class LentaState {
     private _rows: BodyRow[] = [];
     private _sortedRows: BodyRow[] = [];
     private _viewRows: BodyRow[] = [];
@@ -105,8 +105,8 @@ export class State {
             if (!isDefined(propA) || !isDefined(propB)) {
                 return 0;
             }
-            const nameA = propA.toString().toUpperCase();
-            const nameB = propB.toString().toUpperCase();
+            const nameA = propA.toString().toLowerCase();
+            const nameB = propB.toString().toLowerCase();
             if (cell.sortOrder === SortOrder.asc) {
                 if (nameA < nameB) {
                     return -1;

@@ -14,7 +14,7 @@ import {
     OnDestroy
 } from '@angular/core';
 
-import { State, ViewTemplates, HeaderCell } from './model/state';
+import { LentaState, ViewTemplates, HeaderCell } from './model/lenta-state';
 import { LentaColumn } from './model/lenta-column';
 import { BodyCellTemplateDirective } from './body/cell/body-cell-template.directive';
 import { BodyRowTemplateDirective } from './body/row/body-row-template.directive';
@@ -24,7 +24,7 @@ import { LentaOptions } from './model/lenta-options';
 
 @Component({
     selector: 'ng-lenta',
-    providers: [State],
+    providers: [LentaState],
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None,
     styleUrls: ['./ng-lenta.component.scss'],
@@ -61,7 +61,7 @@ export class NgLentaComponent implements OnInit, OnChanges, OnDestroy {
     private _pendingRows$ = new Subject<any[]>();
     private _destroy$ = new Subject<void>();
     constructor(
-        public state: State,
+        public state: LentaState,
         private _options: LentaOptions,
         private _cd: ChangeDetectorRef
     ) {

@@ -1,7 +1,7 @@
 import { NgLentaComponent } from './ng-lenta.component';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { NO_ERRORS_SCHEMA } from '@angular/core';
-import { State } from './model/state';
+import { LentaState } from './model/state';
 import { LentaOptions } from '..';
 
 describe('NgLentaComponent', () => {
@@ -14,7 +14,7 @@ describe('NgLentaComponent', () => {
             declarations: [NgLentaComponent],
             providers: [
                 LentaOptions,
-                State, 
+                LentaState, 
             ],
             schemas: [
                 NO_ERRORS_SCHEMA

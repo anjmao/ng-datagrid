@@ -1,5 +1,5 @@
 import { Component, OnInit, ChangeDetectionStrategy, Input, Output, EventEmitter } from '@angular/core';
-import { HeaderCell, SortOrder } from '../model/state';
+import { HeaderCell, SortOrder } from '../model/lenta-state';
 
 @Component({
     selector: 'ngl-header',
