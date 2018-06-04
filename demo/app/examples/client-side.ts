@@ -4,7 +4,7 @@ import { delay } from 'rxjs/operators';
 import { NgLentaApi } from 'ng-lenta';
 
 @Component({
-    selector: 'data-source',
+    selector: 'client-side',
     template: `
         <div class="mb-5">
             <button class="btn btn-link" (click)="showAllRows()">Show all rows</button>
@@ -26,7 +26,7 @@ import { NgLentaApi } from 'ng-lenta';
         </ng-lenta>
     `
 })
-export class DataSourceExample implements OnInit {
+export class ClientSide implements OnInit {
     peopleList = new NgLentaApi()
     .setColumns([
         { prop: 'name', name: 'Name' },
@@ -52,7 +52,11 @@ export class DataSourceExample implements OnInit {
         });
 
         this.peopleList.pageChange$.subscribe((page) => {
-            console.log('Page ' + page);
+            console.log(`Page change event: ${page}`);
+        });
+
+        this.peopleList.pageSizeChange$.subscribe((size) => {
+            console.log(`Page size change event: ${size}`);
         });
     }
 

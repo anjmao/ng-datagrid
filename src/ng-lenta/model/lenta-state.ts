@@ -74,8 +74,8 @@ export class LentaState {
         return this._headerCells;
     }
 
-    set pageSize(value: number) {
-        this._pageSize = value;
+    get pageSize() {
+        return this._pageSize;
     }
 
     get currentPage() {
@@ -95,6 +95,19 @@ export class LentaState {
         const startIndex = (page - 1) * this._pageSize;
         const endIndex = startIndex + this._pageSize;
         this._viewRows = [...this._sortedRows.slice(startIndex, endIndex)];
+    }
+
+    refreshPage() {
+        this.setPage(this._currentPage);
+    }
+
+    setInitialPageSize(size: number) {
+        this._pageSize = size;
+    }
+
+    updatePageSize(size: number) {
+        this._pageSize = size;
+        this.setPage(this._currentPage);
     }
 
     setNextPage() {

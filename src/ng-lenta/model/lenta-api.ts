@@ -11,10 +11,7 @@ export class NgLentaApi {
     _nextPage$ = new Subject<void>();
     _previousPage$ = new Subject<void>();
     pageChange$ = new Subject<number>();
-    // private _columns: LentaColumn[] = [];
-    // private _page = 1;
-    // private _totalCount = 0;
-    // private _options: LentaOptions = new LentaOptions(null);
+    pageSizeChange$ = new Subject<number>();
 
     setRows(rows: Observable<any[]> | any[]) {
         if (isArray(rows)) {

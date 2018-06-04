@@ -39,9 +39,10 @@ import { NgLentaApi } from './model/lenta-api';
         <ngl-footer>
             <ngl-paging
                 (pageChange)="pageChange($event)"
+                (pageSizeChange)="pageSizeChange($event)"
                 [totalCount]="totalCount"
                 [maxSize]="options.paging.maxSize"
-                [pageSize]="options.paging.pageSize"
+                [pageSize]="state.pageSize"
                 [page]="state.currentPage">
             </ngl-paging>
         </ngl-footer>
@@ -63,7 +64,7 @@ export class NgLentaComponent implements OnChanges, OnDestroy {
     ) {
         this.options = new LentaOptions(null);
         this.options.mergeOptions(_defaultOptions);
-        this.state.pageSize = this.options.paging.pageSize;
+        this.state.setInitialPageSize(this.options.paging.pageSize);
     }
 
     ngOnChanges() {
@@ -114,6 +115,12 @@ export class NgLentaComponent implements OnChanges, OnDestroy {
     pageChange(page: number) {
         this.state.setPage(page);
         this.api!.pageChange$.next(page);
+        this._cd.markForCheck();
+    }
+
+    pageSizeChange(size: number) {
+        this.state.updatePageSize(size);
+        this.api!.pageSizeChange$.next(size);
         this._cd.markForCheck();
     }
 

@@ -42,19 +42,26 @@ import { isNumber } from '../../util/value-util';
         </a>
       </li>
     </ul>
+    <div class="ngl-items-per-page-list">
+        <select (change)="onPageSizeChange($event)">
+            <option [value]="s" *ngFor="let s of pageSizes">{{s}}</option>
+        </select>
+    </div>
   `
 })
 export class PagingComponent implements OnChanges {
-    pageCount = 0;
-    pages: number[] = [];
-
     @Input() disabled = false;
     @Input() totalCount = 0;
     @Input() maxSize = 0;
     @Input() page = 1;
     @Input() pageSize = 0;
 
-    @Output() pageChange = new EventEmitter<number>(true);
+    @Output() pageChange = new EventEmitter<number>();
+    @Output() pageSizeChange = new EventEmitter<number>();
+
+    pageCount = 0;
+    pages: number[] = [];
+    pageSizes = [10, 20, 50, 100];
 
     constructor(private _cd: ChangeDetectorRef) {
     }
@@ -78,6 +85,10 @@ export class PagingComponent implements OnChanges {
 
     isEllipsis(pageNumber): boolean {
         return pageNumber === -1;
+    }
+
+    onPageSizeChange($event) {
+        this.pageSizeChange.next(parseInt($event.target.value, 10));
     }
 
     private _applyEllipses(start: number, end: number) {
