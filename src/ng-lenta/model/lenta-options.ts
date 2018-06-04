@@ -56,7 +56,7 @@ export class LentaOptions {
         }
     }
 
-    mergeInput(opts: LentaOptions) {
+    mergeOptions(opts: LentaOptions) {
         this.clientSide = opts.clientSide;
         this.sorting = opts.sorting;
         this.paging = opts.paging;

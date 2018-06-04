@@ -10,6 +10,10 @@ export function isPromise(value: any) {
     return value instanceof Promise;
 }
 
+export function isArray(value: any) {
+    return Array.isArray(value);
+}
+
 export function isFunction(value: any) {
     return value instanceof Function;
 }

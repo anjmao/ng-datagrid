@@ -78,6 +78,10 @@ export class LentaState {
         this._pageSize = value;
     }
 
+    get currentPage() {
+        return this._currentPage;
+    }
+
     constructor(private _options: LentaOptions) {
         this._pageSize = _options.paging.pageSize;
     }
@@ -91,6 +95,14 @@ export class LentaState {
         const startIndex = (page - 1) * this._pageSize;
         const endIndex = startIndex + this._pageSize;
         this._viewRows = [...this._sortedRows.slice(startIndex, endIndex)];
+    }
+
+    setNextPage() {
+        this.setPage(this.currentPage + 1);
+    }
+
+    setPreviousPage() {
+        this.setPage(this.currentPage - 1);
     }
 
     sort(cell: HeaderCell) {
@@ -128,7 +140,7 @@ export class LentaState {
     }
 
     setRows(rows: any[], templates: ViewTemplates) {
-        if (rows.length > 0 && !this._colMap) {
+        if (rows.length > 0 && this._colMap.size === 0) {
             throw new Error('Columns should be set first.');
         }
 

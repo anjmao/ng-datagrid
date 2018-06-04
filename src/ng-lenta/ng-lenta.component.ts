@@ -1,9 +1,7 @@
 import {
     Component,
-    OnInit,
     OnChanges,
     Input,
-    SimpleChanges,
     ChangeDetectionStrategy,
     ViewEncapsulation,
     QueryList,
@@ -18,9 +16,10 @@ import { LentaState, ViewTemplates, HeaderCell } from './model/lenta-state';
 import { LentaColumn } from './model/lenta-column';
 import { BodyCellTemplateDirective } from './body/cell/body-cell-template.directive';
 import { BodyRowTemplateDirective } from './body/row/body-row-template.directive';
-import { Subject, BehaviorSubject } from 'rxjs';
+import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { LentaOptions } from './model/lenta-options';
+import { NgLentaApi } from './model/lenta-api';
 
 @Component({
     selector: 'ng-lenta',
@@ -39,57 +38,71 @@ import { LentaOptions } from './model/lenta-options';
         </ngl-body>
         <ngl-footer>
             <ngl-paging
-                (pageChange)="changePage($event)"
+                (pageChange)="pageChange($event)"
                 [totalCount]="totalCount"
                 [maxSize]="options.paging.maxSize"
                 [pageSize]="options.paging.pageSize"
-                [page]="page">
+                [page]="state.currentPage">
             </ngl-paging>
         </ngl-footer>
     `
 })
-export class NgLentaComponent implements OnInit, OnChanges, OnDestroy {
-    @Input() rows: any[] = [];
-    @Input() columns: LentaColumn[] = [];
-    @Input() page = 1;
-    @Input() totalCount = 0;
-    @Input() options: LentaOptions;
-
+export class NgLentaComponent implements OnChanges, OnDestroy {
+    @Input() api: NgLentaApi | null = null;
     @ContentChildren(BodyCellTemplateDirective) bodyCellTemplates: QueryList<BodyCellTemplateDirective> | null = null;
     @ContentChild(BodyRowTemplateDirective) bodyRowTemplate: BodyRowTemplateDirective | null = null;
 
-    private _pendingRows$ = new BehaviorSubject<any[]>([]);
+    totalCount = 0;
+    options: LentaOptions;
+
     private _destroy$ = new Subject<void>();
     constructor(
         public state: LentaState,
-        private _options: LentaOptions,
+        _defaultOptions: LentaOptions,
         private _cd: ChangeDetectorRef
     ) {
-        this.options = this._options;
-        this.state.pageSize = this._options.paging.pageSize;
+        this.options = new LentaOptions(null);
+        this.options.mergeOptions(_defaultOptions);
+        this.state.pageSize = this.options.paging.pageSize;
     }
 
-    ngOnInit() {
-        this._options.mergeInput(this.options);
-    }
-
-    ngOnChanges(changes: SimpleChanges) {
-        if (changes.columns) {
-            this._setColumns(changes.columns.currentValue);
-        }
-
-        if (changes.rows) {
-            this._pendingRows$.next(changes.rows.currentValue);
-        }
+    ngOnChanges() {
     }
 
     ngAfterContentInit() {
-        this._pendingRows$.pipe(takeUntil(this._destroy$)).subscribe((rows) => {
-            if (this._options.clientSide) {
+        if (!this.api) {
+            return;
+        }
+        this.api._options$.pipe(takeUntil(this._destroy$)).subscribe((opts) => {
+            this.options.mergeOptions(opts);
+            this._cd.markForCheck();
+        });
+        this.api._columns$.pipe(takeUntil(this._destroy$)).subscribe((columns) => {
+            this._setColumns(columns);
+            this._cd.markForCheck();
+        });
+        this.api._rows$.pipe(takeUntil(this._destroy$)).subscribe((rows) => {
+            if (this.options.clientSide) {
                 this.totalCount = rows.length;
             }
             this._setRows(rows);
-            this.state.setPage(this.page);
+            this.state.setPage(1);
+            this._cd.markForCheck();
+        });
+
+        this.api._page$.pipe(takeUntil(this._destroy$)).subscribe((page) => {
+            this.state.setPage(page);
+            this._cd.markForCheck();
+        });
+
+        this.api._nextPage$.pipe(takeUntil(this._destroy$)).subscribe(() => {
+            this.state.setNextPage();
+            this._cd.markForCheck();
+        });
+
+        this.api._previousPage$.pipe(takeUntil(this._destroy$)).subscribe(() => {
+            this.state.setPreviousPage();
+            this._cd.markForCheck();
         });
     }
 
@@ -98,8 +111,9 @@ export class NgLentaComponent implements OnInit, OnChanges, OnDestroy {
         this._destroy$.complete();
     }
 
-    changePage(page: number) {
+    pageChange(page: number) {
         this.state.setPage(page);
+        this.api!.pageChange$.next(page);
         this._cd.markForCheck();
     }
 
