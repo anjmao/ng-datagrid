@@ -11,6 +11,7 @@ import { LayoutSidenavComponent } from './layout/sidenav-component';
 import { DataService } from './shared/data.service';
 import { ClientSide } from './examples/client-side';
 import { NgLentaModule } from 'ng-lenta';
+import { ServerSide } from './examples/server-side';
 
 export const appRoutes: Routes = [
     {
@@ -22,6 +23,11 @@ export const appRoutes: Routes = [
         path: 'client-side',
         component: ClientSide,
         data: { title: 'Client side' }
+    },
+    {
+        path: 'server-side',
+        component: ServerSide,
+        data: { title: 'Server side' }
     }
 ];
 
@@ -48,7 +54,8 @@ export const appRoutes: Routes = [
         AppComponent,
         LayoutHeaderComponent,
         LayoutSidenavComponent,
-        ClientSide
+        ClientSide,
+        ServerSide
     ],
     entryComponents: [],
     bootstrap: [AppComponent]

@@ -17,7 +17,7 @@ import { LentaColumn } from './model/lenta-column';
 import { BodyCellTemplateDirective } from './body/cell/body-cell-template.directive';
 import { BodyRowTemplateDirective } from './body/row/body-row-template.directive';
 import { Subject } from 'rxjs';
-import { takeUntil } from 'rxjs/operators';
+import { takeUntil, switchMap } from 'rxjs/operators';
 import { LentaOptions } from './model/lenta-options';
 import { NgLentaApi } from './model/lenta-api';
 
@@ -90,6 +90,16 @@ export class NgLentaComponent implements OnChanges, OnDestroy {
             this.state.setPage(1);
             this._cd.markForCheck();
         });
+
+        this.api._rowsStream$.pipe(
+            takeUntil(this._destroy$),
+            switchMap((data) => data)
+        ).subscribe((data) => {
+            this._setRows(data.rows);
+            this.totalCount = data.totalCount;
+            this.state.setPage(1);
+            this._cd.markForCheck();
+        })
 
         this.api._page$.pipe(takeUntil(this._destroy$)).subscribe((page) => {
             this.state.setPage(page);

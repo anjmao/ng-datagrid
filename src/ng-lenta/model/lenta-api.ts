@@ -1,10 +1,17 @@
-import { BehaviorSubject, Observable, Subject } from 'rxjs';
+import { BehaviorSubject, Observable, Subject, ReplaySubject } from 'rxjs';
 import { isArray } from '../util/value-util';
 import { LentaColumn, LentaColumnCtor, LentaColumns } from './lenta-column';
 import { LentaOptionsCtor, LentaOptions } from './lenta-options';
 
+export interface RowsStream {
+    rows: any[];
+    totalCount: number;
+}
+
 export class NgLentaApi {
     _rows$ = new BehaviorSubject<any[]>([]);
+    // TODO: find better name?
+    _rowsStream$ = new ReplaySubject<Observable<RowsStream>>();
     _columns$ = new BehaviorSubject<LentaColumn[]>([]);
     _options$ = new Subject<LentaOptions>();
     _page$ = new BehaviorSubject<number>(1);
@@ -13,13 +20,11 @@ export class NgLentaApi {
     pageChange$ = new Subject<number>();
     pageSizeChange$ = new Subject<number>();
 
-    setRows(rows: Observable<any[]> | any[]) {
+    setRows(rows: Observable<RowsStream> | any[]) {
         if (isArray(rows)) {
             this._rows$.next(rows as any[]);
         } else {
-            (rows as Observable<any[]>).subscribe((res) => {
-                this._rows$.next(res);
-            });
+            this._rowsStream$.next(rows as Observable<RowsStream>);
         }
         return this;
     }
