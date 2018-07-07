@@ -1,4 +1,4 @@
-[![npm version](https://badge.fury.io/js/%40ng-lenta.svg)](https://badge.fury.io/js/%40ng-lenta)
+[![npm version](https://badge.fury.io/js/ng-lenta.svg)](https://badge.fury.io/js/ng-lenta)
 [![Build Status][travis-badge]][travis-badge-url]
 [![Coverage Status][coveralls-image]][coveralls-url]
 [![gzip bundle size](http://img.badgesize.io/https://unpkg.com/ng-lenta@latest/bundles/ng-lenta.umd.min.js?compression=gzip&style=flat-square)][ng-lenta-url]
