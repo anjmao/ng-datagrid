@@ -1,7 +1,7 @@
 {
   "$schema": "../node_modules/ng-packagr/package.schema.json",
   "name": "@ng-lenta/ng-lenta",
-  "version": "0.0.2",
+  "version": "0.1.0",
   "description": "Angular ng-lenta - data table",
   "author": "Anjmao",
   "license": "MIT",
